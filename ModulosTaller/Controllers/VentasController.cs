@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ModulosTaller.Models;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,6 +25,7 @@ namespace ModulosTaller.Controllers
                 .Include(v => v.IdClienteNavigation)
                 .Include(v => v.VentaDetalles)
                     .ThenInclude(vd => vd.IdProductoNavigation)
+                .OrderByDescending(v => v.FechaVenta)
                 .ToListAsync();
 
             return View(ventas);
@@ -53,13 +56,15 @@ namespace ModulosTaller.Controllers
         // GET: Ventas/Create
         public async Task<IActionResult> Create()
         {
-            // Cargar clientes desde la base de datos
-            var clientes = await _context.Clientes.ToListAsync();
+            // Cargar clientes activos y productos
+            var clientes = await _context.Clientes.Where(c => c.Estado).ToListAsync();
             var productos = await _context.Productos.ToListAsync();
 
-            // Crear SelectList para los dropdowns
-            ViewBag.ClientesList = new SelectList(clientes, "IdCliente", "NombreCliente");
+            ViewBag.ClientesList = new SelectList(clientes, "IdCliente", "NombreCompleto");
             ViewBag.ProductosList = new SelectList(productos, "IdProducto", "NombreProducto");
+
+            // Establecer fecha actual por defecto
+            ViewBag.FechaActual = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
 
             return View();
         }
@@ -107,10 +112,10 @@ namespace ModulosTaller.Controllers
             }
 
             // Recargar los datos si hay error
-            var clientes = await _context.Clientes.ToListAsync();
+            var clientes = await _context.Clientes.Where(c => c.Estado).ToListAsync();
             var productosList = await _context.Productos.ToListAsync();
 
-            ViewBag.ClientesList = new SelectList(clientes, "IdCliente", "NombreCliente", venta.IdCliente);
+            ViewBag.ClientesList = new SelectList(clientes, "IdCliente", "NombreCompleto", venta.IdCliente);
             ViewBag.ProductosList = new SelectList(productosList, "IdProducto", "NombreProducto");
 
             return View(venta);
@@ -133,10 +138,10 @@ namespace ModulosTaller.Controllers
                 return NotFound();
             }
 
-            var clientes = await _context.Clientes.ToListAsync();
+            var clientes = await _context.Clientes.Where(c => c.Estado).ToListAsync();
             var productos = await _context.Productos.ToListAsync();
 
-            ViewBag.ClientesList = new SelectList(clientes, "IdCliente", "NombreCliente", venta.IdCliente);
+            ViewBag.ClientesList = new SelectList(clientes, "IdCliente", "NombreCompleto", venta.IdCliente);
             ViewBag.ProductosList = new SelectList(productos, "IdProducto", "NombreProducto");
 
             return View(venta);
@@ -198,10 +203,10 @@ namespace ModulosTaller.Controllers
                 }
             }
 
-            var clientes = await _context.Clientes.ToListAsync();
+            var clientes = await _context.Clientes.Where(c => c.Estado).ToListAsync();
             var productosList = await _context.Productos.ToListAsync();
 
-            ViewBag.ClientesList = new SelectList(clientes, "IdCliente", "NombreCliente", venta.IdCliente);
+            ViewBag.ClientesList = new SelectList(clientes, "IdCliente", "NombreCompleto", venta.IdCliente);
             ViewBag.ProductosList = new SelectList(productosList, "IdProducto", "NombreProducto");
 
             return View(venta);
