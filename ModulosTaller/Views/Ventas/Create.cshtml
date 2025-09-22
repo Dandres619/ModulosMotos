@@ -1,0 +1,156 @@
+﻿@model ModulosTaller.Models.Venta
+
+@{
+    ViewData["Title"] = "Nueva Venta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Nueva Venta</h1>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Volver a la lista
+        </a>
+    </div>
+
+    <!-- Mostrar mensajes de éxito o error -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Información de la Venta</h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" id="ventaForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="IdCliente" class="control-label">Cliente *</label>
+                            <select asp-for="IdCliente" class="form-control" asp-items="ViewBag.ClientesList" required>
+                                <option value="">-- Seleccionar Cliente --</option>
+                            </select>
+                            <span asp-validation-for="IdCliente" class="text-danger"></span>
+                            @if (ViewBag.ClientesList == null || ((SelectList)ViewBag.ClientesList).Count() == 1)
+                            {
+                                <small class="text-warning">No hay clientes registrados. <a asp-controller="Clientes" asp-action="Create">Crear cliente</a></small>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="FechaVenta" class="control-label">Fecha de Venta</label>
+                            <input asp-for="FechaVenta" class="form-control" type="datetime-local"
+                                   value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                            <span asp-validation-for="FechaVenta" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h5>Productos de la Venta</h5>
+                        <div id="productos-container">
+                            <div class="producto-row row mb-2 border-bottom pb-2">
+                                <div class="col-md-5">
+                                    <select name="productos" class="form-control producto-select" required>
+                                        <option value="">-- Seleccionar Producto --</option>
+                                        @if (ViewBag.ProductosList != null)
+                                        {
+                                            foreach (var item in ViewBag.ProductosList as SelectList)
+                                            {
+                                                <option value="@item.Value" data-precio="@item.Text.Split('|').LastOrDefault()?.Trim()">
+                                                    @item.Text
+                                                </option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="number" name="cantidades" class="form-control cantidad" min="1" value="1" required />
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="precios" class="form-control precio" step="0.01" min="0" readonly />
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-danger btn-remove-producto" disabled>
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="btn-add-producto" class="btn btn-success mt-2">
+                            <i class="fas fa-plus"></i> Agregar Producto
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Guardar Venta
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Función para obtener el precio del producto
+            function obtenerPrecioProducto(productoId) {
+                // Esta función podría hacer una llamada AJAX para obtener el precio actual
+                // Por ahora, usaremos el precio del data attribute
+                return parseFloat($('.producto-select option[value="' + productoId + '"]').data('precio')) || 0;
+            }
+
+            // Actualizar precio cuando se selecciona producto
+            $(document).on('change', '.producto-select', function() {
+                var productoId = $(this).val();
+                if (productoId) {
+                    var precio = obtenerPrecioProducto(productoId);
+                    $(this).closest('.producto-row').find('.precio').val(precio.toFixed(2));
+                } else {
+                    $(this).closest('.producto-row').find('.precio').val('');
+                }
+            });
+
+            // Agregar nuevo producto
+            $('#btn-add-producto').click(function() {
+                var newRow = $('.producto-row:first').clone();
+                newRow.find('select').val('');
+                newRow.find('input').val('');
+                newRow.find('.cantidad').val(1);
+                newRow.find('.precio').val('');
+                newRow.find('.btn-remove-producto').prop('disabled', false);
+                $('#productos-container').append(newRow);
+            });
+
+            // Eliminar producto
+            $(document).on('click', '.btn-remove-producto', function() {
+                if ($('.producto-row').length > 1) {
+                    $(this).closest('.producto-row').remove();
+                }
+            });
+        });
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

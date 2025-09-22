@@ -1,0 +1,38 @@
+﻿@model ModulosTaller.Models.Cliente
+
+@{
+    ViewData["Title"] = "Eliminar Cliente";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Eliminar Cliente</h1>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 bg-warning">
+            <h6 class="m-0 font-weight-bold text-white">¿Está seguro que desea eliminar este cliente?</h6>
+        </div>
+        <div class="card-body">
+            <h4 class="text-danger">Esta acción no se puede deshacer.</h4>
+
+            <dl class="row">
+                <dt class="col-sm-3">Nombre:</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.NombreCliente)</dd>
+
+                <dt class="col-sm-3">Correo:</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Correo)</dd>
+
+                <dt class="col-sm-3">Teléfono:</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Telefono)</dd>
+            </dl>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="IdCliente" />
+                <button type="submit" class="btn btn-danger">Eliminar</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
