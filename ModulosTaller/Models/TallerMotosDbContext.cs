@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace ModulosTaller.Models;
@@ -16,43 +15,25 @@ public partial class TallerMotosDbContext : DbContext
     }
 
     public virtual DbSet<Agendamiento> Agendamientos { get; set; }
-
     public virtual DbSet<CategoriaProducto> CategoriaProductos { get; set; }
-
     public virtual DbSet<Cliente> Clientes { get; set; }
-
     public virtual DbSet<Compra> Compras { get; set; }
-
     public virtual DbSet<CompraDetalle> CompraDetalles { get; set; }
-
     public virtual DbSet<Horario> Horarios { get; set; }
-
     public virtual DbSet<Motocicleta> Motocicletas { get; set; }
-
     public virtual DbSet<Permiso> Permisos { get; set; }
-
     public virtual DbSet<Producto> Productos { get; set; }
-
     public virtual DbSet<Proveedore> Proveedores { get; set; }
-
     public virtual DbSet<Role> Roles { get; set; }
-
     public virtual DbSet<Usuario> Usuarios { get; set; }
-
     public virtual DbSet<Venta> Ventas { get; set; }
-
     public virtual DbSet<VentaDetalle> VentaDetalles { get; set; }
-
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Server=DANIEL\\SQLEXPRESS;Initial Catalog=TallerMotosDB;Integrated Security=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Agendamiento>(entity =>
         {
             entity.HasKey(e => e.IdAgendamiento).HasName("PK__Agendami__8516393DC4B8E90B");
-
             entity.Property(e => e.Descripcion).HasMaxLength(200);
             entity.Property(e => e.Fecha).HasColumnType("datetime");
 
@@ -72,7 +53,6 @@ public partial class TallerMotosDbContext : DbContext
         modelBuilder.Entity<CategoriaProducto>(entity =>
         {
             entity.HasKey(e => e.IdCategoria).HasName("PK__Categori__A3C02A1030306DE5");
-
             entity.Property(e => e.NombreCategoria).HasMaxLength(100);
         });
 
@@ -80,15 +60,50 @@ public partial class TallerMotosDbContext : DbContext
         {
             entity.HasKey(e => e.IdCliente).HasName("PK__Clientes__D594664212B0B659");
 
-            entity.Property(e => e.Correo).HasMaxLength(100);
-            entity.Property(e => e.NombreCliente).HasMaxLength(100);
+            entity.Property(e => e.TipoDocumento)
+                .HasMaxLength(10)
+                .IsRequired();
+
+            entity.Property(e => e.Documento)
+                .HasMaxLength(20)
+                .IsRequired();
+
+            entity.Property(e => e.PrimerNombre)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            entity.Property(e => e.SegundoNombre)
+                .HasMaxLength(50);
+
+            entity.Property(e => e.PrimerApellido)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            entity.Property(e => e.SegundoApellido)
+                .HasMaxLength(50);
+
+            entity.Property(e => e.Direccion)
+                .HasMaxLength(200)
+                .IsRequired();
+
             entity.Property(e => e.Telefono).HasMaxLength(20);
+            entity.Property(e => e.Correo).HasMaxLength(100);
+
+            entity.Property(e => e.FechaRegistro)
+                .HasColumnType("datetime")
+                .HasDefaultValueSql("(getdate())");
+
+            entity.Property(e => e.Estado)
+                .HasDefaultValue(true);
+
+            // Índice único para documento
+            entity.HasIndex(e => e.Documento, "UQ__Clientes__Documento")
+                .IsUnique();
         });
 
         modelBuilder.Entity<Compra>(entity =>
         {
             entity.HasKey(e => e.IdCompra).HasName("PK__Compras__0A5CDB5C716AAA18");
-
             entity.Property(e => e.FechaCompra)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -101,9 +116,7 @@ public partial class TallerMotosDbContext : DbContext
         modelBuilder.Entity<CompraDetalle>(entity =>
         {
             entity.HasKey(e => e.IdCompraDetalle).HasName("PK__CompraDe__A1B840C5C2BC30EF");
-
             entity.ToTable("CompraDetalle");
-
             entity.Property(e => e.PrecioUnitario).HasColumnType("decimal(10, 2)");
 
             entity.HasOne(d => d.IdCompraNavigation).WithMany(p => p.CompraDetalles)
@@ -118,16 +131,13 @@ public partial class TallerMotosDbContext : DbContext
         modelBuilder.Entity<Horario>(entity =>
         {
             entity.HasKey(e => e.IdHorario).HasName("PK__Horarios__1539229B0F26AE6A");
-
             entity.Property(e => e.DiaSemana).HasMaxLength(20);
         });
 
         modelBuilder.Entity<Motocicleta>(entity =>
         {
             entity.HasKey(e => e.IdMoto).HasName("PK__Motocicl__33CED5FBEDA1A059");
-
             entity.HasIndex(e => e.Placa, "UQ__Motocicl__8310F99D2178C770").IsUnique();
-
             entity.Property(e => e.Marca).HasMaxLength(50);
             entity.Property(e => e.Modelo).HasMaxLength(50);
             entity.Property(e => e.Placa).HasMaxLength(20);
@@ -140,14 +150,12 @@ public partial class TallerMotosDbContext : DbContext
         modelBuilder.Entity<Permiso>(entity =>
         {
             entity.HasKey(e => e.IdPermiso).HasName("PK__Permisos__0D626EC88C70CD31");
-
             entity.Property(e => e.NombrePermiso).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Producto>(entity =>
         {
             entity.HasKey(e => e.IdProducto).HasName("PK__Producto__09889210FAD937BE");
-
             entity.Property(e => e.NombreProducto).HasMaxLength(100);
             entity.Property(e => e.Precio).HasColumnType("decimal(10, 2)");
 
@@ -159,7 +167,6 @@ public partial class TallerMotosDbContext : DbContext
         modelBuilder.Entity<Proveedore>(entity =>
         {
             entity.HasKey(e => e.IdProveedor).HasName("PK__Proveedo__E8B631AF3DEC2399");
-
             entity.Property(e => e.Direccion).HasMaxLength(200);
             entity.Property(e => e.NombreProveedor).HasMaxLength(100);
             entity.Property(e => e.Telefono).HasMaxLength(20);
@@ -168,7 +175,6 @@ public partial class TallerMotosDbContext : DbContext
         modelBuilder.Entity<Role>(entity =>
         {
             entity.HasKey(e => e.IdRol).HasName("PK__Roles__2A49584C9AE85A0A");
-
             entity.Property(e => e.NombreRol).HasMaxLength(50);
 
             entity.HasMany(d => d.IdPermisos).WithMany(p => p.IdRols)
@@ -192,9 +198,7 @@ public partial class TallerMotosDbContext : DbContext
         modelBuilder.Entity<Usuario>(entity =>
         {
             entity.HasKey(e => e.IdUsuario).HasName("PK__Usuarios__5B65BF97AE0A9458");
-
             entity.HasIndex(e => e.Correo, "UQ__Usuarios__60695A19A7DCDF4A").IsUnique();
-
             entity.Property(e => e.Clave).HasMaxLength(200);
             entity.Property(e => e.Correo).HasMaxLength(100);
             entity.Property(e => e.Nombre).HasMaxLength(100);
@@ -207,7 +211,6 @@ public partial class TallerMotosDbContext : DbContext
         modelBuilder.Entity<Venta>(entity =>
         {
             entity.HasKey(e => e.IdVenta).HasName("PK__Ventas__BC1240BDFC61093A");
-
             entity.Property(e => e.FechaVenta)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -224,9 +227,7 @@ public partial class TallerMotosDbContext : DbContext
         modelBuilder.Entity<VentaDetalle>(entity =>
         {
             entity.HasKey(e => e.IdVentaDetalle).HasName("PK__VentaDet__2787211D41EF6E96");
-
             entity.ToTable("VentaDetalle");
-
             entity.Property(e => e.PrecioUnitario).HasColumnType("decimal(10, 2)");
 
             entity.HasOne(d => d.IdProductoNavigation).WithMany(p => p.VentaDetalles)

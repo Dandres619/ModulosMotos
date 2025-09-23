@@ -1,0 +1,471 @@
+﻿@model IEnumerable<ModulosTaller.Models.Cliente>
+
+@{
+    ViewData["Title"] = "Clientes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-users mr-2"></i>Clientes
+        </h1>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-circle mr-1"></i> Nuevo Cliente
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show auto-dismiss" role="alert" data-dismiss-time="5000">
+            <i class="fas fa-check-circle mr-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show auto-dismiss" role="alert" data-dismiss-time="5000">
+            <i class="fas fa-exclamation-circle mr-2"></i>@TempData["ErrorMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <!-- Card de Búsqueda y Filtros -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-search mr-2"></i>Buscar Clientes
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="searchInput"><i class="fas fa-filter mr-2"></i>Buscar por nombre, documento o correo:</label>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Escribe para filtrar...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="statusFilter"><i class="fas fa-filter mr-2"></i>Filtrar por estado:</label>
+                        <select class="form-control" id="statusFilter">
+                            <option value="all">Todos</option>
+                            <option value="active">Activos</option>
+                            <option value="inactive">Inactivos</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="documentTypeFilter"><i class="fas fa-filter mr-2"></i>Tipo de documento:</label>
+                        <select class="form-control" id="documentTypeFilter">
+                            <option value="all">Todos</option>
+                            <option value="CC">Cédula de Ciudadanía</option>
+                            <option value="CE">Cédula de Extranjería</option>
+                            <option value="TI">Tarjeta de Identidad</option>
+                            <option value="PAS">Pasaporte</option>
+                            <option value="NIT">NIT</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card de Lista de Clientes -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-list mr-2"></i>Lista de Clientes
+                <span id="clientCount" class="badge badge-primary ml-2"></span>
+            </h6>
+            <div>
+                <button id="btnExport" class="btn btn-success btn-sm">
+                    <i class="fas fa-file-excel mr-1"></i> Exportar
+                </button>
+                <button id="btnRefresh" class="btn btn-info btn-sm ml-1">
+                    <i class="fas fa-sync-alt mr-1"></i> Actualizar
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="clientesTable" width="100%" cellspacing="0">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th><i class="fas fa-id-card mr-1"></i> Documento</th>
+                            <th><i class="fas fa-user mr-1"></i> Nombre Completo</th>
+                            <th><i class="fas fa-phone mr-1"></i> Teléfono</th>
+                            <th><i class="fas fa-envelope mr-1"></i> Correo</th>
+                            <th><i class="fas fa-circle mr-1"></i> Estado</th>
+                            <th><i class="fas fa-cogs mr-1"></i> Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr class="client-row">
+                                <td>
+                                    <span class="badge badge-secondary">@item.TipoDocumento</span>
+                                    <br>
+                                    <strong>@item.Documento</strong>
+                                </td>
+                                <td>
+                                    <strong>@($"{item.PrimerNombre} {item.SegundoNombre ?? ""} {item.PrimerApellido} {item.SegundoApellido ?? ""}".Trim().Replace("  ", " "))</strong>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.Telefono))
+                                    {
+                                        <i class="fas fa-phone text-success mr-1"></i>
+                                        @item.Telefono
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted"><i class="fas fa-phone-slash mr-1"></i>No especificado</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.Correo))
+                                    {
+                                        <i class="fas fa-envelope text-primary mr-1"></i>
+                                        <a href="mailto:@item.Correo" class="text-decoration-none" title="Enviar correo">@item.Correo</a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted"><i class="fas fa-envelope mr-1"></i>No especificado</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.Estado)
+                                    {
+                                        <span class="badge badge-success">
+                                            <i class="fas fa-check-circle mr-1"></i>ACTIVO
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-danger">
+                                            <i class="fas fa-times-circle mr-1"></i>INACTIVO
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a asp-action="Edit" asp-route-id="@item.IdCliente"
+                                           class="btn btn-warning btn-action"
+                                           title="Editar cliente"
+                                           data-toggle="tooltip">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@item.IdCliente"
+                                           class="btn btn-info btn-action"
+                                           title="Ver detalles completos"
+                                           data-toggle="tooltip">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.IdCliente"
+                                           class="btn btn-danger btn-action"
+                                           title="Marcar como inactivo"
+                                           data-toggle="tooltip">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mensaje cuando no hay resultados -->
+            <div id="noResults" class="text-center d-none">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">No se encontraron clientes</h4>
+                <p class="text-muted">Intenta con otros términos de búsqueda</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Inicializar tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Función para auto-desaparecer alertas
+            function initAutoDismissAlerts() {
+                $('.alert.auto-dismiss').each(function() {
+                    var alert = $(this);
+                    var dismissTime = alert.data('dismiss-time') || 5000; // 5 segundos por defecto
+
+                    setTimeout(function() {
+                        alert.fadeTo(500, 0).slideUp(500, function() {
+                            alert.remove();
+                        });
+                    }, dismissTime);
+                });
+            }
+
+            // Inicializar auto-dismiss
+            initAutoDismissAlerts();
+
+            // También cerrar alertas al hacer clic en la X
+            $('.alert .close').on('click', function() {
+                $(this).closest('.alert').fadeTo(500, 0).slideUp(500, function() {
+                    $(this).remove();
+                });
+            });
+
+            // Función para filtrar la tabla
+            function filterTable() {
+                var searchText = $('#searchInput').val().toLowerCase();
+                var statusFilter = $('#statusFilter').val();
+                var documentTypeFilter = $('#documentTypeFilter').val();
+
+                var visibleRows = 0;
+
+                $('.client-row').each(function() {
+                    var row = $(this);
+                    var rowText = row.text().toLowerCase();
+                    var isActive = row.find('.badge-success').length > 0;
+                    var documentType = row.find('td:first .badge-secondary').text().trim();
+
+                    var matchesSearch = searchText === '' || rowText.indexOf(searchText) > -1;
+                    var matchesStatus = statusFilter === 'all' ||
+                                      (statusFilter === 'active' && isActive) ||
+                                      (statusFilter === 'inactive' && !isActive);
+                    var matchesDocumentType = documentTypeFilter === 'all' ||
+                                            documentType === documentTypeFilter;
+
+                    if (matchesSearch && matchesStatus && matchesDocumentType) {
+                        row.show();
+                        visibleRows++;
+                    } else {
+                        row.hide();
+                    }
+                });
+
+                // Mostrar/ocultar mensaje de no resultados
+                if (visibleRows === 0) {
+                    $('#noResults').removeClass('d-none');
+                } else {
+                    $('#noResults').addClass('d-none');
+                }
+
+                // Actualizar contador
+                $('#clientCount').text(visibleRows + ' / @Model.Count()');
+            }
+
+            // Eventos para filtros
+            $('#searchInput').on('keyup', function() {
+                filterTable();
+            });
+
+            $('#statusFilter, #documentTypeFilter').on('change', function() {
+                filterTable();
+            });
+
+            // Botón de actualizar
+            $('#btnRefresh').on('click', function() {
+                $('#searchInput').val('');
+                $('#statusFilter').val('all');
+                $('#documentTypeFilter').val('all');
+                filterTable();
+            });
+
+            // Botón de exportar a Excel
+            $('#btnExport').on('click', function() {
+                exportToExcel();
+            });
+
+            // Función para exportar a Excel
+            function exportToExcel() {
+                var searchText = $('#searchInput').val();
+                var statusFilter = $('#statusFilter').val();
+                var documentTypeFilter = $('#documentTypeFilter').val();
+
+                // Mostrar loading
+                var exportBtn = $('#btnExport');
+                var originalHtml = exportBtn.html();
+                exportBtn.html('<i class="fas fa-spinner fa-spin mr-1"></i> Exportando...');
+                exportBtn.prop('disabled', true);
+
+                // Crear formulario temporal para enviar los datos
+                var form = $('<form>', {
+                    method: 'POST',
+                    action: '@Url.Action("ExportarExcel", "Clientes")'
+                });
+
+                // Agregar campos ocultos con los filtros actuales
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'filtroBusqueda',
+                    value: searchText
+                }).appendTo(form);
+
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'filtroEstado',
+                    value: statusFilter
+                }).appendTo(form);
+
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'filtroTipoDocumento',
+                    value: documentTypeFilter
+                }).appendTo(form);
+
+                // Agregar token anti-falsificación
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: '__RequestVerificationToken',
+                    value: $('input[name="__RequestVerificationToken"]').val()
+                }).appendTo(form);
+
+                // Enviar formulario
+                form.appendTo('body').submit().remove();
+
+                // Restaurar botón después de 2 segundos
+                setTimeout(function() {
+                    exportBtn.html(originalHtml);
+                    exportBtn.prop('disabled', false);
+                }, 2000);
+            }
+
+            // Inicializar contador
+            $('#clientCount').text('@Model.Count() / @Model.Count()');
+
+            // Efecto de carga en botones de acción
+            $('.btn-action').hover(
+                function() {
+                    $(this).addClass('shadow-lg');
+                    $(this).css('transform', 'scale(1.1)');
+                },
+                function() {
+                    $(this).removeClass('shadow-lg');
+                    $(this).css('transform', 'scale(1)');
+                }
+            );
+        });
+    </script>
+
+    <style>
+        .client-row:hover {
+            background-color: #f8f9fa;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn {
+            transition: all 0.3s ease;
+            border-radius: 0.35rem;
+        }
+
+        .table-hover tbody tr:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .badge {
+            font-weight: 600;
+            padding: 0.5em 0.8em;
+        }
+
+        /* Botones de acción con colores sólidos y iconos visibles */
+        .btn-action {
+            border: none;
+            margin: 0 2px;
+            padding: 0.5rem 0.7rem;
+            min-width: 40px;
+            color: white !important;
+            font-weight: 600;
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, #f6c23e, #f8b400) !important;
+            border: none !important;
+        }
+
+            .btn-warning:hover {
+                background: linear-gradient(45deg, #f8b400, #e0a800) !important;
+                transform: scale(1.1);
+            }
+
+        .btn-info {
+            background: linear-gradient(45deg, #36b9cc, #2c9faf) !important;
+            border: none !important;
+        }
+
+            .btn-info:hover {
+                background: linear-gradient(45deg, #2c9faf, #248896) !important;
+                transform: scale(1.1);
+            }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #e74a3b, #d52a1a) !important;
+            border: none !important;
+        }
+
+            .btn-danger:hover {
+                background: linear-gradient(45deg, #d52a1a, #b32416) !important;
+                transform: scale(1.1);
+            }
+
+        /* Iconos más grandes y visibles */
+        .btn-action i {
+            font-size: 1.1em;
+            color: white;
+            filter: brightness(0) invert(1);
+        }
+
+        /* Mejor contraste para texto */
+        .table td, .table th {
+            vertical-align: middle;
+        }
+
+        /* Efecto hover en botones */
+        .btn-action:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            color: white !important;
+        }
+
+        /* Animación para alertas */
+        .alert {
+            transition: all 0.5s ease;
+        }
+
+        /* Espaciado en celdas de acciones */
+        td:last-child {
+            min-width: 140px;
+        }
+
+        /* Botones del header */
+        .btn-sm i {
+            margin-right: 0.3rem;
+        }
+
+        /* Gradientes para los badges de estado */
+        .badge-success {
+            background: linear-gradient(45deg, #1cc88a, #17a673);
+            border: none;
+        }
+
+        .badge-danger {
+            background: linear-gradient(45deg, #e74a3b, #d52a1a);
+            border: none;
+        }
+
+        .badge-secondary {
+            background: linear-gradient(45deg, #858796, #6c757d);
+            border: none;
+        }
+    </style>
+}

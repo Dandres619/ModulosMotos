@@ -1,0 +1,179 @@
+﻿@model IEnumerable<ModulosTaller.Models.Venta>
+
+@{
+    ViewData["Title"] = "Ventas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-dollar-sign mr-2"></i>Ventas
+        </h1>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-circle"></i> Nueva Venta
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle mr-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <!-- Card de Lista de Ventas -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-list mr-2"></i>Historial de Ventas
+                <span class="badge badge-primary ml-2">@Model.Count()</span>
+            </h6>
+            <div>
+                <button id="btnRefresh" class="btn btn-info btn-sm">
+                    <i class="fas fa-sync-alt mr-1"></i> Actualizar
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="ventasTable" width="100%" cellspacing="0">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th><i class="fas fa-hashtag mr-1"></i> ID</th>
+                            <th><i class="fas fa-user mr-1"></i> Cliente</th>
+                            <th><i class="fas fa-calendar mr-1"></i> Fecha</th>
+                            <th><i class="fas fa-cubes mr-1"></i> Productos</th>
+                            <th><i class="fas fa-money-bill-wave mr-1"></i> Total</th>
+                            <th><i class="fas fa-cogs mr-1"></i> Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var venta in Model)
+                        {
+                            var total = venta.VentaDetalles?.Sum(vd => vd.Cantidad * vd.PrecioUnitario) ?? 0;
+                            var cantidadProductos = venta.VentaDetalles?.Sum(vd => vd.Cantidad) ?? 0;
+
+                            <tr>
+                                <td>
+                                    <strong>#@venta.IdVenta</strong>
+                                </td>
+                                <td>
+                                    @if (venta.IdClienteNavigation != null)
+                                    {
+                                        <div>
+                                            <strong>@($"{venta.IdClienteNavigation.PrimerNombre} {venta.IdClienteNavigation.PrimerApellido}")</strong>
+                                            <br>
+                                            <small class="text-muted">
+                                                <i class="fas fa-id-card"></i>
+                                                @venta.IdClienteNavigation.TipoDocumento-@venta.IdClienteNavigation.Documento
+                                            </small>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Cliente no disponible</span>
+                                    }
+                                </td>
+                                <td>
+                                    <i class="fas fa-calendar text-info mr-1"></i>
+                                    @venta.FechaVenta.ToString("dd/MM/yyyy")
+                                    <br>
+                                    <small class="text-muted">@venta.FechaVenta.ToString("hh:mm tt")</small>
+                                </td>
+                                <td>
+                                    <span class="badge badge-primary">
+                                        <i class="fas fa-cube mr-1"></i>@cantidadProductos productos
+                                    </span>
+                                    <br>
+                                    <small class="text-muted">
+                                        @(venta.VentaDetalles?.Count ?? 0) tipos
+                                    </small>
+                                </td>
+                                <td>
+                                    <span class="h6 font-weight-bold text-success">
+                                        @total.ToString("C")
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Edit" asp-route-id="@venta.IdVenta"
+                                           class="btn btn-warning btn-sm"
+                                           title="Editar venta"
+                                           data-toggle="tooltip">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@venta.IdVenta"
+                                           class="btn btn-info btn-sm"
+                                           title="Ver detalles"
+                                           data-toggle="tooltip">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@venta.IdVenta"
+                                           class="btn btn-danger btn-sm"
+                                           title="Eliminar venta"
+                                           data-toggle="tooltip">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mensaje cuando no hay ventas -->
+            @if (!Model.Any())
+            {
+                <div class="text-center py-4">
+                    <i class="fas fa-receipt fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">No hay ventas registradas</h4>
+                    <p class="text-muted">Comienza creando tu primera venta</p>
+                    <a asp-action="Create" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i> Crear Primera Venta
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Inicializar tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Botón de actualizar
+            $('#btnRefresh').on('click', function() {
+                location.reload();
+            });
+
+            // Efecto de carga en botones de acción
+            $('.btn-sm').hover(
+                function() { $(this).addClass('shadow-sm'); },
+                function() { $(this).removeClass('shadow-sm'); }
+            );
+        });
+    </script>
+
+    <style>
+        .table-hover tbody tr:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .btn-sm {
+            transition: all 0.3s ease;
+        }
+
+        .badge {
+            font-weight: 600;
+        }
+    </style>
+}
