@@ -8,28 +8,183 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0 text-gray-800">Detalles del Cliente</h1>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Volver a la lista
+        </a>
     </div>
 
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Información del Cliente</h6>
+            <div>
+                @if (Model.Estado)
+                {
+                    <span class="badge badge-success" style="background-color: #28a745; color: white; padding: 0.5em 1em; font-size: 0.9em;">
+                        <i class="fas fa-check-circle mr-1"></i>ACTIVO
+                    </span>
+                }
+                else
+                {
+                    <span class="badge badge-danger" style="background-color: #dc3545; color: white; padding: 0.5em 1em; font-size: 0.9em;">
+                        <i class="fas fa-times-circle mr-1"></i>INACTIVO
+                    </span>
+                }
+            </div>
         </div>
         <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Nombre:</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.NombreCliente)</dd>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="text-primary mb-3">
+                        <i class="fas fa-id-card mr-2"></i>Información Personal
+                    </h5>
+                    <dl class="row">
+                        <dt class="col-sm-4 text-muted">Tipo Documento:</dt>
+                        <dd class="col-sm-8 font-weight-bold">@Html.DisplayFor(model => model.TipoDocumento)</dd>
 
-                <dt class="col-sm-3">Correo:</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Correo)</dd>
+                        <dt class="col-sm-4 text-muted">Número Documento:</dt>
+                        <dd class="col-sm-8 font-weight-bold">@Html.DisplayFor(model => model.Documento)</dd>
 
-                <dt class="col-sm-3">Teléfono:</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Telefono)</dd>
-            </dl>
+                        <dt class="col-sm-4 text-muted">Nombre Completo:</dt>
+                        <dd class="col-sm-8 font-weight-bold text-primary">@Model.NombreCompleto</dd>
 
-            <div class="form-group">
-                <a asp-action="Edit" asp-route-id="@Model.IdCliente" class="btn btn-warning">Editar</a>
-                <a asp-action="Index" class="btn btn-secondary">Volver a la lista</a>
+                        <dt class="col-sm-4 text-muted">Primer Nombre:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.PrimerNombre)</dd>
+
+                        <dt class="col-sm-4 text-muted">Segundo Nombre:</dt>
+                        <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.SegundoNombre) ? "No especificado" : Model.SegundoNombre)</dd>
+
+                        <dt class="col-sm-4 text-muted">Primer Apellido:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.PrimerApellido)</dd>
+
+                        <dt class="col-sm-4 text-muted">Segundo Apellido:</dt>
+                        <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.SegundoApellido) ? "No especificado" : Model.SegundoApellido)</dd>
+                    </dl>
+                </div>
+
+                <div class="col-md-6">
+                    <h5 class="text-primary mb-3">
+                        <i class="fas fa-address-book mr-2"></i>Información de Contacto
+                    </h5>
+                    <dl class="row">
+                        <dt class="col-sm-4 text-muted">Dirección:</dt>
+                        <dd class="col-sm-8">
+                            @if (!string.IsNullOrEmpty(Model.Direccion))
+                            {
+                                <i class="fas fa-map-marker-alt text-warning mr-1"></i>
+                                @Model.Direccion
+                            }
+                            else
+                            {
+                                <span class="text-muted">No especificada</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">Teléfono:</dt>
+                        <dd class="col-sm-8">
+                            @if (!string.IsNullOrEmpty(Model.Telefono))
+                            {
+                                <i class="fas fa-phone text-success mr-1"></i>
+                                @Model.Telefono
+                            }
+                            else
+                            {
+                                <span class="text-muted">No especificado</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">Correo:</dt>
+                        <dd class="col-sm-8">
+                            @if (!string.IsNullOrEmpty(Model.Correo))
+                            {
+                                <i class="fas fa-envelope text-primary mr-1"></i>
+                                <a href="mailto:@Model.Correo" class="text-decoration-none">@Model.Correo</a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No especificado</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">Fecha Registro:</dt>
+                        <dd class="col-sm-8">
+                            <i class="fas fa-calendar text-info mr-1"></i>
+                            @Model.FechaRegistro.ToString("dd/MM/yyyy HH:mm")
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">Estado:</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Estado)
+                            {
+                                <span class="badge badge-success" style="background-color: #28a745; color: white; padding: 0.4em 0.8em;">
+                                    <i class="fas fa-check-circle mr-1"></i>ACTIVO
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger" style="background-color: #dc3545; color: white; padding: 0.4em 0.8em;">
+                                    <i class="fas fa-times-circle mr-1"></i>INACTIVO
+                                </span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="border-top pt-3">
+                        <div class="btn-group" role="group">
+                            <a asp-action="Edit" asp-route-id="@Model.IdCliente" class="btn btn-warning">
+                                <i class="fas fa-edit mr-1"></i> Editar Cliente
+                            </a>
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-list mr-1"></i> Volver a la lista
+                            </a>
+                            @if (Model.Estado)
+                            {
+                                <a asp-action="Delete" asp-route-id="@Model.IdCliente" class="btn btn-danger">
+                                    <i class="fas fa-trash mr-1"></i> Marcar como Inactivo
+                                </a>
+                            }
+                            else
+                            {
+                                <form asp-action="Activar" asp-route-id="@Model.IdCliente" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-check mr-1"></i> Activar Cliente
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .card-header {
+        background: linear-gradient(45deg, #4e73df, #224abe);
+    }
+
+        .card-header h6 {
+            color: white !important;
+        }
+
+    dt {
+        font-weight: 500;
+    }
+
+    dd {
+        margin-bottom: 0.8rem;
+    }
+
+    .border-top {
+        border-top: 1px solid #e3e6f0 !important;
+    }
+
+    .btn {
+        border-radius: 0.35rem;
+    }
+</style>

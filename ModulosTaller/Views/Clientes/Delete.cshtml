@@ -8,6 +8,9 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0 text-gray-800">Eliminar Cliente</h1>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Volver a la lista
+        </a>
     </div>
 
     <div class="card shadow mb-4">
@@ -15,22 +18,60 @@
             <h6 class="m-0 font-weight-bold text-white">¿Está seguro que desea eliminar este cliente?</h6>
         </div>
         <div class="card-body">
-            <h4 class="text-danger">Esta acción no se puede deshacer.</h4>
+            <h4 class="text-danger">Esta acción no se puede deshacer. El cliente será marcado como inactivo.</h4>
 
-            <dl class="row">
-                <dt class="col-sm-3">Nombre:</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.NombreCliente)</dd>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="text-primary">Información del Cliente</h5>
+                    <dl class="row">
+                        <dt class="col-sm-4">Documento:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.TipoDocumento)-@Html.DisplayFor(model => model.Documento)</dd>
 
-                <dt class="col-sm-3">Correo:</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Correo)</dd>
+                        <dt class="col-sm-4">Nombre Completo:</dt>
+                        <dd class="col-sm-8">@Model.NombreCompleto</dd>
 
-                <dt class="col-sm-3">Teléfono:</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.Telefono)</dd>
-            </dl>
+                        <dt class="col-sm-4">Teléfono:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Telefono)</dd>
+
+                        <dt class="col-sm-4">Correo:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Correo)</dd>
+                    </dl>
+                </div>
+
+                <div class="col-md-6">
+                    <h5 class="text-primary">Información Adicional</h5>
+                    <dl class="row">
+                        <dt class="col-sm-4">Dirección:</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Direccion)</dd>
+
+                        <dt class="col-sm-4">Fecha Registro:</dt>
+                        <dd class="col-sm-8">@Model.FechaRegistro.ToString("dd/MM/yyyy")</dd>
+
+                        <dt class="col-sm-4">Estado Actual:</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Estado)
+                            {
+                                <span class="badge badge-success">Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Inactivo</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="alert alert-warning mt-3">
+                <strong>Nota:</strong> Esta acción realizará una eliminación lógica. El cliente será marcado como inactivo
+                pero permanecerá en el sistema por motivos de historial.
+            </div>
 
             <form asp-action="Delete">
                 <input type="hidden" asp-for="IdCliente" />
-                <button type="submit" class="btn btn-danger">Eliminar</button>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Confirmar Eliminación
+                </button>
                 <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
             </form>
         </div>

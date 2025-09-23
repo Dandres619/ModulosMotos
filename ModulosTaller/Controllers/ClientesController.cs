@@ -20,14 +20,14 @@ namespace ModulosTaller.Controllers
             _context = context;
         }
 
-        // GET: Clientes
+        // GET: Clientes - CORREGIDO: Mostrar todos los clientes, no solo los activos
         public async Task<IActionResult> Index()
         {
-            var clientes = await _context.Clientes.Where(c => c.Estado).ToListAsync();
+            var clientes = await _context.Clientes.ToListAsync(); // Removido el filtro .Where(c => c.Estado)
             return View(clientes);
         }
 
-        // GET: Clientes/Details/5
+        // GET: Clientes/Details/5 - CORREGIDO: Remover filtro por estado
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,7 +36,7 @@ namespace ModulosTaller.Controllers
             }
 
             var cliente = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.IdCliente == id);
+                .FirstOrDefaultAsync(m => m.IdCliente == id); // Removido && m.Estado
 
             if (cliente == null)
             {
@@ -70,11 +70,18 @@ namespace ModulosTaller.Controllers
             {
                 try
                 {
-                    // La fecha de registro se asignará automáticamente por el defaultValue en la BD
-                    _context.Clientes.Add(cliente);
-                    await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Cliente creado exitosamente";
-                    return RedirectToAction(nameof(Index));
+                    // Verificar si el documento ya existe
+                    if (await _context.Clientes.AnyAsync(c => c.Documento == cliente.Documento))
+                    {
+                        ModelState.AddModelError("Documento", "Ya existe un cliente con este número de documento.");
+                    }
+                    else
+                    {
+                        _context.Clientes.Add(cliente);
+                        await _context.SaveChangesAsync();
+                        TempData["SuccessMessage"] = "Cliente creado exitosamente";
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
                 catch (DbUpdateException ex)
                 {
@@ -94,7 +101,7 @@ namespace ModulosTaller.Controllers
             return View(cliente);
         }
 
-        // GET: Clientes/Edit/5
+        // GET: Clientes/Edit/5 - CORREGIDO: Remover filtro por estado
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -103,7 +110,7 @@ namespace ModulosTaller.Controllers
             }
 
             var cliente = await _context.Clientes.FindAsync(id);
-            if (cliente == null)
+            if (cliente == null) // Removido || !cliente.Estado
             {
                 return NotFound();
             }
@@ -134,10 +141,18 @@ namespace ModulosTaller.Controllers
             {
                 try
                 {
-                    _context.Update(cliente);
-                    await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Cliente actualizado exitosamente";
-                    return RedirectToAction(nameof(Index));
+                    // Verificar si el documento ya existe en otro cliente
+                    if (await _context.Clientes.AnyAsync(c => c.Documento == cliente.Documento && c.IdCliente != id))
+                    {
+                        ModelState.AddModelError("Documento", "Ya existe otro cliente con este número de documento.");
+                    }
+                    else
+                    {
+                        _context.Update(cliente);
+                        await _context.SaveChangesAsync();
+                        TempData["SuccessMessage"] = "Cliente actualizado exitosamente";
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -164,7 +179,7 @@ namespace ModulosTaller.Controllers
             return View(cliente);
         }
 
-        // GET: Clientes/Delete/5
+        // GET: Clientes/Delete/5 - CORREGIDO: Remover filtro por estado
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -173,7 +188,7 @@ namespace ModulosTaller.Controllers
             }
 
             var cliente = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.IdCliente == id);
+                .FirstOrDefaultAsync(m => m.IdCliente == id); // Removido && m.Estado
 
             if (cliente == null)
             {
@@ -191,10 +206,11 @@ namespace ModulosTaller.Controllers
             var cliente = await _context.Clientes.FindAsync(id);
             if (cliente != null)
             {
+                // Soft delete - cambiar estado a false en lugar de eliminar
                 cliente.Estado = false;
                 _context.Update(cliente);
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Cliente eliminado exitosamente";
+                TempData["SuccessMessage"] = "Cliente marcado como inactivo exitosamente";
             }
 
             return RedirectToAction(nameof(Index));
@@ -244,12 +260,12 @@ namespace ModulosTaller.Controllers
                     worksheet.Cell(1, 1).Value = "Reporte de Clientes - Rafa Motos";
                     worksheet.Cell(1, 1).Style.Font.FontSize = 16;
                     worksheet.Cell(1, 1).Style.Font.Bold = true;
-                    worksheet.Range(1, 1, 1, 8).Merge();
+                    worksheet.Range(1, 1, 1, 11).Merge();
 
                     // Fecha de generación
                     worksheet.Cell(2, 1).Value = $"Generado el: {DateTime.Now:dd/MM/yyyy HH:mm}";
                     worksheet.Cell(2, 1).Style.Font.Italic = true;
-                    worksheet.Range(2, 1, 2, 8).Merge();
+                    worksheet.Range(2, 1, 2, 11).Merge();
 
                     // Encabezados de columnas
                     var headers = new string[] {
