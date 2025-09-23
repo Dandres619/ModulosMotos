@@ -11,6 +11,9 @@ public partial class Compra
 
     public int? IdProveedor { get; set; }
 
+    public bool EstaAnulada { get; set; } = false;
+
+
     public virtual ICollection<CompraDetalle> CompraDetalles { get; set; } = new List<CompraDetalle>();
 
     public virtual Proveedore? IdProveedorNavigation { get; set; }

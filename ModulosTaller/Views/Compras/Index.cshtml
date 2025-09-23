@@ -1,41 +1,162 @@
 ﻿@model IEnumerable<ModulosTaller.Models.Compra>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Compras";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary">Compras</h2>
+    <a href="@Url.Action("Create")" class="btn btn-gradient-primary shadow-sm">
+        <i class="bi bi-plus-circle me-2"></i> Nueva Compra
+    </a>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaCompra)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdProveedorNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaCompra)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdProveedorNavigation.IdProveedor)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdCompra">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdCompra">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdCompra">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="table-responsive shadow-sm rounded-4 overflow-hidden">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>#ID</th>
+                <th>Proveedor</th>
+                <th>Fecha</th>
+                <th>Productos</th>
+                <th>Total</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var compra in Model)
+            {
+                <tr class="@(compra.EstaAnulada ? "text-decoration-line-through text-muted" : "")">
+                    <td>@compra.IdCompra</td>
+                    <td>@compra.IdProveedorNavigation?.NombreProveedor</td>
+                    <td>@compra.FechaCompra.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        @foreach (var detalle in compra.CompraDetalles)
+                        {
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span>@detalle.IdProductoNavigation?.NombreProducto</span>
+                                <small class="text-muted">(@detalle.IdProductoNavigation?.IdCategoriaNavigation?.NombreCategoria) x @detalle.Cantidad</small>
+                                <span class="text-success fw-semibold ms-2">@detalle.PrecioUnitario.ToString("C")</span>
+                            </div>
+                        }
+                    </td>
+                    <td class="fw-bold text-success">
+                        @compra.CompraDetalles.Sum(d => d.Cantidad * d.PrecioUnitario).ToString("C")
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Details", "Compras", new { id = compra.IdCompra })"
+                           class="btn btn-sm btn-info me-1 shadow-sm">
+                            <i class="bi bi-eye"></i>
+                        </a>
+
+                        @if (!compra.EstaAnulada)
+                        {
+                            <button type="button" class="btn btn-sm btn-danger shadow-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#anularModal"
+                                    data-id="@compra.IdCompra">
+                                <i class="bi bi-x-circle"></i>
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+    <!-- Paginación -->
+    <div class="d-flex justify-content-center mt-4">
+        <nav aria-label="Paginación de Compras">
+            <ul class="pagination pagination-modern">
+                <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1 })">&laquo;</a>
+                </li>
+
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1 })">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="anularModal" tabindex="-1" aria-labelledby="anularModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg rounded-4">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="anularModalLabel">
+                    <i class="bi bi-exclamation-triangle me-2"></i> Confirmar Anulación
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">¿Está seguro que desea <strong>anular</strong> esta compra? Esta acción no eliminará la compra, solo la marcará como <span class="text-danger fw-bold">ANULADA</span>.</p>
+            </div>
+            <div class="modal-footer">
+                <form id="anularForm" method="post">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Anular Compra</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var anularModal = document.getElementById('anularModal');
+    anularModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var compraId = button.getAttribute('data-id');
+        var form = document.getElementById('anularForm');
+        form.action = '/Compras/Anular/' + compraId;
+    });
+</script>
+
+<style>
+    body {
+        background-color: #f4f6f9;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .btn-gradient-primary {
+        background: linear-gradient(90deg, #4e54c8, #8f94fb);
+        color: #fff;
+    }
+
+        .btn-gradient-primary:hover {
+            background: linear-gradient(90deg, #3b40a4, #6b70e1);
+            color: #fff;
+        }
+
+    .pagination-modern .page-link {
+        border-radius: 0.75rem;
+        padding: 8px 14px;
+        border: none;
+        background-color: #f1f5ff;
+        color: #4e54c8;
+        font-weight: 600;
+        transition: all 0.2s;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    }
+
+        .pagination-modern .page-link:hover {
+            background-color: #4e54c8;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+    .pagination-modern .page-item.active .page-link {
+        background: linear-gradient(90deg, #4e54c8, #8f94fb);
+        color: white;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+</style>
