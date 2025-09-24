@@ -3,16 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\danie\\onedrive\\documentos\\sena\\4. cuarto trimestre\\c#\\modulostaller\\modulostaller\\views\\compras\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\views\\compras\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\danie\\onedrive\\documentos\\sena\\4. cuarto trimestre\\c#\\modulostaller\\modulostaller\\controllers\\proveedorescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\controllers\\proveedorescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\danie\\onedrive\\documentos\\sena\\4. cuarto trimestre\\c#\\modulostaller\\modulostaller\\controllers\\comprascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\controllers\\comprascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\danie\\onedrive\\documentos\\sena\\4. cuarto trimestre\\c#\\modulostaller\\modulostaller\\views\\proveedores\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\views\\proveedores\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\danie\\onedrive\\documentos\\sena\\4. cuarto trimestre\\c#\\modulostaller\\modulostaller\\views\\compras\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\views\\compras\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\danie\\onedrive\\documentos\\sena\\4. cuarto trimestre\\c#\\modulostaller\\modulostaller\\views\\proveedores\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\views\\proveedores\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\danie\\onedrive\\documentos\\sena\\4. cuarto trimestre\\c#\\modulostaller\\modulostaller\\views\\proveedores\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\views\\proveedores\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\danie\\onedrive\\documentos\\sena\\4. cuarto trimestre\\c#\\modulostaller\\modulostaller\\views\\proveedores\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\views\\proveedores\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,45 +30,71 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ComprasController.cs",
-              "DocumentMoniker": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\ModulosTaller\\Controllers\\ComprasController.cs",
-              "RelativeDocumentMoniker": "ModulosTaller\\Controllers\\ComprasController.cs",
-              "ToolTip": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\ModulosTaller\\Controllers\\ComprasController.cs",
-              "RelativeToolTip": "ModulosTaller\\Controllers\\ComprasController.cs",
-              "ViewState": "AgIAACUAAAAAAAAAAAAswCsAAAAfAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "ProveedoresController.cs",
+              "DocumentMoniker": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\ModulosTaller\\Controllers\\ProveedoresController.cs",
+              "RelativeDocumentMoniker": "ModulosTaller\\Controllers\\ProveedoresController.cs",
+              "ToolTip": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\ModulosTaller\\Controllers\\ProveedoresController.cs",
+              "RelativeToolTip": "ModulosTaller\\Controllers\\ProveedoresController.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAA/wCgAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-23T20:01:46.492Z",
+              "WhenOpened": "2025-09-24T18:07:46.532Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\ModulosTaller\\Views\\Proveedores\\Details.cshtml",
+              "RelativeDocumentMoniker": "ModulosTaller\\Views\\Proveedores\\Details.cshtml",
+              "ToolTip": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\ModulosTaller\\Views\\Proveedores\\Details.cshtml",
+              "RelativeToolTip": "ModulosTaller\\Views\\Proveedores\\Details.cshtml",
+              "ViewState": "AgIAAHEAAAAAAAAAAAAuwIwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-24T18:00:34.678Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\ModulosTaller\\Views\\Proveedores\\Index.cshtml",
+              "RelativeDocumentMoniker": "ModulosTaller\\Views\\Proveedores\\Index.cshtml",
+              "ToolTip": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\ModulosTaller\\Views\\Proveedores\\Index.cshtml",
+              "RelativeToolTip": "ModulosTaller\\Views\\Proveedores\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-24T17:40:55.789Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Details.cshtml",
-              "DocumentMoniker": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\ModulosTaller\\Views\\Compras\\Details.cshtml",
-              "RelativeDocumentMoniker": "ModulosTaller\\Views\\Compras\\Details.cshtml",
-              "ToolTip": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\ModulosTaller\\Views\\Compras\\Details.cshtml",
-              "RelativeToolTip": "ModulosTaller\\Views\\Compras\\Details.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAfAAAAAAAAAA==",
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\ModulosTaller\\Views\\Proveedores\\Edit.cshtml",
+              "RelativeDocumentMoniker": "ModulosTaller\\Views\\Proveedores\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\ModulosTaller\\Views\\Proveedores\\Edit.cshtml",
+              "RelativeToolTip": "ModulosTaller\\Views\\Proveedores\\Edit.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACUAAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-23T19:53:06.23Z",
+              "WhenOpened": "2025-09-24T17:40:40.325Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\ModulosTaller\\Views\\Compras\\Index.cshtml",
-              "RelativeDocumentMoniker": "ModulosTaller\\Views\\Compras\\Index.cshtml",
-              "ToolTip": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\ModulosTaller\\Views\\Compras\\Index.cshtml",
-              "RelativeToolTip": "ModulosTaller\\Views\\Compras\\Index.cshtml",
-              "ViewState": "AgIAACgAAAAAAAAAAAAwwDoAAAAdAAAAAAAAAA==",
+              "DocumentIndex": 4,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\ModulosTaller\\Views\\Proveedores\\Create.cshtml",
+              "RelativeDocumentMoniker": "ModulosTaller\\Views\\Proveedores\\Create.cshtml",
+              "ToolTip": "C:\\Users\\danie\\OneDrive\\Documentos\\SENA\\4. Cuarto trimestre\\C#\\ModulosTaller\\ModulosTaller\\Views\\Proveedores\\Create.cshtml",
+              "RelativeToolTip": "ModulosTaller\\Views\\Proveedores\\Create.cshtml",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABgAAAA/AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-23T04:00:29.635Z",
+              "WhenOpened": "2025-09-24T17:39:12.935Z",
               "EditorCaption": ""
             }
           ]

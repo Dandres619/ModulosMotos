@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ModulosTaller.Migrations
 {
     /// <inheritdoc />
-    public partial class Estado : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,9 +30,17 @@ namespace ModulosTaller.Migrations
                 {
                     IdCliente = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NombreCliente = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    TipoDocumento = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Documento = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    PrimerNombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    SegundoNombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    PrimerApellido = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    SegundoApellido = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Direccion = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Telefono = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    Correo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    Correo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    FechaRegistro = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
+                    Estado = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -323,6 +331,12 @@ namespace ModulosTaller.Migrations
                 name: "IX_Agendamientos_IdMoto",
                 table: "Agendamientos",
                 column: "IdMoto");
+
+            migrationBuilder.CreateIndex(
+                name: "UQ__Clientes__Documento",
+                table: "Clientes",
+                column: "Documento",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CompraDetalle_IdCompra",

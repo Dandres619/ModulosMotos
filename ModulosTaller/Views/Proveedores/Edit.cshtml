@@ -1,1 +1,38 @@
-﻿
+﻿@model ModulosTaller.Models.Proveedore
+
+@{
+    ViewData["Title"] = "Editar Proveedor";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary fw-bold">Editar Proveedor</h2>
+    <a href="@Url.Action("Index")" class="btn btn-outline-secondary shadow-sm">
+        <i class="bi bi-arrow-left me-2"></i> Volver
+    </a>
+</div>
+
+<div class="card shadow-sm rounded-4 border-0">
+    <div class="card-body p-4">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="IdProveedor" />
+            <div class="mb-3">
+                <label asp-for="NombreProveedor" class="form-label fw-semibold"></label>
+                <input asp-for="NombreProveedor" class="form-control shadow-sm rounded-3" />
+                <span asp-validation-for="NombreProveedor" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Telefono" class="form-label fw-semibold"></label>
+                <input asp-for="Telefono" class="form-control shadow-sm rounded-3" />
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Direccion" class="form-label fw-semibold"></label>
+                <input asp-for="Direccion" class="form-control shadow-sm rounded-3" />
+                <span asp-validation-for="Direccion" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-gradient-primary shadow-sm mt-3">
+                <i class="bi bi-pencil me-2"></i> Guardar Cambios
+            </button>
+        </form>
+    </div>
+</div>

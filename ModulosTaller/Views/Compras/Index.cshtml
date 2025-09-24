@@ -2,50 +2,111 @@
 
 @{
     ViewData["Title"] = "Compras";
+    var totalCompras = Model.Count();
+    var comprasActivas = Model.Count(c => !c.EstaAnulada);
+    var comprasAnuladas = Model.Count(c => c.EstaAnulada);
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="text-primary">Compras</h2>
+<!-- HEADER DASHBOARD -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card card-stat shadow-sm border-0">
+            <div class="card-body d-flex align-items-center">
+                <div class="icon-box bg-primary text-white me-3">
+                    <i class="bi bi-cart4 fs-3"></i>
+                </div>
+                <div>
+                    <h6 class="text-muted mb-1">Total Compras</h6>
+                    <h4 class="fw-bold">@totalCompras</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-stat shadow-sm border-0">
+            <div class="card-body d-flex align-items-center">
+                <div class="icon-box bg-success text-white me-3">
+                    <i class="bi bi-check2-circle fs-3"></i>
+                </div>
+                <div>
+                    <h6 class="text-muted mb-1">Activas</h6>
+                    <h4 class="fw-bold text-success">@comprasActivas</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-stat shadow-sm border-0">
+            <div class="card-body d-flex align-items-center">
+                <div class="icon-box bg-danger text-white me-3">
+                    <i class="bi bi-x-octagon fs-3"></i>
+                </div>
+                <div>
+                    <h6 class="text-muted mb-1">Anuladas</h6>
+                    <h4 class="fw-bold text-danger">@comprasAnuladas</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- BOTÓN CREAR -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-primary fw-bold">Listado de Compras</h2>
     <a href="@Url.Action("Create")" class="btn btn-gradient-primary shadow-sm">
         <i class="bi bi-plus-circle me-2"></i> Nueva Compra
     </a>
 </div>
 
-<div class="table-responsive shadow-sm rounded-4 overflow-hidden">
-    <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
+<!-- TABLA -->
+<div class="table-responsive shadow-lg rounded-4 overflow-hidden">
+    <table class="table table-hover align-middle mb-0 table-modern">
+        <thead class="table-header sticky-top">
             <tr>
-                <th>#ID</th>
-                <th>Proveedor</th>
-                <th>Fecha</th>
-                <th>Productos</th>
-                <th>Total</th>
-                <th>Acciones</th>
+                <th><i class="bi bi-hash me-1 text-secondary"></i> ID</th>
+                <th><i class="bi bi-person-badge me-1 text-secondary"></i> Proveedor</th>
+                <th><i class="bi bi-calendar-event me-1 text-secondary"></i> Fecha</th>
+                <th><i class="bi bi-box-seam me-1 text-secondary"></i> Productos</th>
+                <th><i class="bi bi-currency-dollar me-1 text-secondary"></i> Total</th>
+                <th><i class="bi bi-gear me-1 text-secondary"></i> Acciones</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var compra in Model)
             {
-                <tr class="@(compra.EstaAnulada ? "text-decoration-line-through text-muted" : "")">
-                    <td>@compra.IdCompra</td>
+                <tr class="@(compra.EstaAnulada ? "row-anulada" : "")">
+                    <td>
+                        <span class="fw-bold">#@compra.IdCompra</span>
+                        @if (compra.EstaAnulada)
+                        {
+                            <span class="badge-status badge-anulada ms-2">Anulada</span>
+                        }
+                        else
+                        {
+                            <span class="badge-status badge-activa ms-2">Activa</span>
+                        }
+                    </td>
                     <td>@compra.IdProveedorNavigation?.NombreProveedor</td>
                     <td>@compra.FechaCompra.ToString("dd/MM/yyyy")</td>
                     <td>
                         @foreach (var detalle in compra.CompraDetalles)
                         {
-                            <div class="d-flex justify-content-between align-items-center mb-1">
+                            <div class="producto-item" data-bs-toggle="tooltip" title="Categoría: @detalle.IdProductoNavigation?.IdCategoriaNavigation?.NombreCategoria">
+                                <i class="bi bi-caret-right-fill text-primary"></i>
                                 <span>@detalle.IdProductoNavigation?.NombreProducto</span>
-                                <small class="text-muted">(@detalle.IdProductoNavigation?.IdCategoriaNavigation?.NombreCategoria) x @detalle.Cantidad</small>
+                                <small class="text-muted ms-1">x @detalle.Cantidad</small>
                                 <span class="text-success fw-semibold ms-2">@detalle.PrecioUnitario.ToString("C")</span>
                             </div>
                         }
                     </td>
-                    <td class="fw-bold text-success">
-                        @compra.CompraDetalles.Sum(d => d.Cantidad * d.PrecioUnitario).ToString("C")
+                    <td>
+                        <span class="badge-total">
+                            @compra.CompraDetalles.Sum(d => d.Cantidad * d.PrecioUnitario).ToString("C")
+                        </span>
                     </td>
                     <td>
                         <a href="@Url.Action("Details", "Compras", new { id = compra.IdCompra })"
-                           class="btn btn-sm btn-info me-1 shadow-sm">
+                           class="btn btn-sm btn-info shadow-sm" data-bs-toggle="tooltip" title="Ver Detalles">
                             <i class="bi bi-eye"></i>
                         </a>
 
@@ -54,7 +115,8 @@
                             <button type="button" class="btn btn-sm btn-danger shadow-sm"
                                     data-bs-toggle="modal"
                                     data-bs-target="#anularModal"
-                                    data-id="@compra.IdCompra">
+                                    data-id="@compra.IdCompra"
+                                    title="Anular Compra">
                                 <i class="bi bi-x-circle"></i>
                             </button>
                         }
@@ -62,101 +124,218 @@
                 </tr>
             }
         </tbody>
-
     </table>
-
-    <!-- Paginación -->
-    <div class="d-flex justify-content-center mt-4">
-        <nav aria-label="Paginación de Compras">
-            <ul class="pagination pagination-modern">
-                <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
-                    <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1 })">&laquo;</a>
-                </li>
-
-                @for (int i = 1; i <= ViewBag.TotalPages; i++)
-                {
-                    <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
-                        <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
-                    </li>
-                }
-
-                <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
-                    <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1 })">&raquo;</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
 </div>
 
-<!-- Modal de Confirmación -->
+<!-- MODAL ANULAR COMPRA -->
 <div class="modal fade" id="anularModal" tabindex="-1" aria-labelledby="anularModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow-lg rounded-4">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="anularModalLabel">
-                    <i class="bi bi-exclamation-triangle me-2"></i> Confirmar Anulación
+        <div class="modal-content shadow-lg border-0 rounded-4">
+            <div class="modal-header bg-danger text-white rounded-top-4">
+                <h5 class="modal-title fw-bold" id="anularModalLabel">
+                    <i class="bi bi-x-circle me-2"></i> Anular Compra
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
-            <div class="modal-body">
-                <p class="mb-0">¿Está seguro que desea <strong>anular</strong> esta compra? Esta acción no eliminará la compra, solo la marcará como <span class="text-danger fw-bold">ANULADA</span>.</p>
+            <div class="modal-body text-center">
+                <p class="fs-5">¿Está seguro de que desea <strong>anular</strong> esta compra?</p>
+                <small class="text-muted">Esta acción no eliminará la compra, solo la marcará como anulada.</small>
             </div>
-            <div class="modal-footer">
-                <form id="anularForm" method="post">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-danger">Anular Compra</button>
+            <div class="modal-footer justify-content-center">
+                <form id="anularForm" method="post" asp-action="Anular" asp-controller="Compras">
+                    <input type="hidden" name="id" id="compraId" />
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg me-1"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-danger rounded-pill px-4 shadow-sm">
+                        <i class="bi bi-check2-circle me-1"></i> Anular
+                    </button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
+<!-- PAGINACIÓN -->
+@if (ViewBag.TotalPages > 1)
+{
+    <nav aria-label="Navegación de páginas" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <!-- Botón Anterior -->
+            <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link"
+                   href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1 })"
+                   tabindex="-1">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+
+            <!-- Números de páginas -->
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link"
+                       href="@Url.Action("Index", new { page = i })">@i</a>
+                </li>
+            }
+
+            <!-- Botón Siguiente -->
+            <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                <a class="page-link"
+                   href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1 })">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+}
+
+
 <script>
-    var anularModal = document.getElementById('anularModal');
+    const anularModal = document.getElementById('anularModal');
     anularModal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget;
-        var compraId = button.getAttribute('data-id');
-        var form = document.getElementById('anularForm');
-        form.action = '/Compras/Anular/' + compraId;
+        let button = event.relatedTarget;
+        let compraId = button.getAttribute('data-id');
+        let inputHidden = anularModal.querySelector('#compraId');
+        inputHidden.value = compraId;
     });
 </script>
 
 <style>
-    body {
-        background-color: #f4f6f9;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Cards estadísticas */
+    .card-stat {
+        border-radius: 1rem;
+        transition: all 0.3s ease-in-out;
+    }
+
+        .card-stat:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+    .icon-box {
+        width: 55px;
+        height: 55px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Tabla moderna */
+    .table-modern {
+        border-collapse: separate;
+        border-spacing: 0 8px;
+    }
+
+        .table-modern thead {
+            background: linear-gradient(90deg, #f0f2ff, #e9ecff);
+            font-weight: 600;
+            color: #4e54c8;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .table-modern tbody tr {
+            background: #fff;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+            .table-modern tbody tr:hover {
+                background: #f9faff;
+                transform: scale(1.01);
+                box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            }
+
+        .table-modern td, .table-modern th {
+            padding: 1rem;
+        }
+
+    /* Productos */
+    .producto-item {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 4px 0;
+        border-bottom: 1px dashed #eee;
+    }
+
+        .producto-item:last-child {
+            border-bottom: none;
+        }
+
+    /* Badges */
+    .badge-status {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .badge-anulada {
+        background: linear-gradient(90deg, #dc3545, #ff6b6b);
+        color: white;
+    }
+
+    .badge-activa {
+        background: linear-gradient(90deg, #28a745, #5dd98d);
+        color: white;
+    }
+
+    .badge-total {
+        background: linear-gradient(90deg, #007bff, #00c6ff);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 10px;
+        font-weight: bold;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    /* Row anulada */
+    .row-anulada {
+        text-decoration: line-through;
+        opacity: 0.7;
+        background: #fff5f5 !important;
     }
 
     .btn-gradient-primary {
-        background: linear-gradient(90deg, #4e54c8, #8f94fb);
-        color: #fff;
+        background: linear-gradient(90deg, #667eea, #764ba2); /* morado-azul vibrante */
+        color: #fff !important;
+        font-weight: 600;
+        padding: 0.6rem 1.2rem;
+        border-radius: 12px;
+        transition: all 0.3s ease-in-out;
+        border: none;
     }
 
         .btn-gradient-primary:hover {
-            background: linear-gradient(90deg, #3b40a4, #6b70e1);
-            color: #fff;
+            background: linear-gradient(90deg, #5a67d8, #6b46c1); /* más oscuro al hover */
+            color: #fff !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
         }
 
-    .pagination-modern .page-link {
-        border-radius: 0.75rem;
-        padding: 8px 14px;
-        border: none;
-        background-color: #f1f5ff;
+    .pagination .page-link {
+        border-radius: 10px;
+        margin: 0 3px;
         color: #4e54c8;
         font-weight: 600;
-        transition: all 0.2s;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
     }
 
-        .pagination-modern .page-link:hover {
-            background-color: #4e54c8;
-            color: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        .pagination .page-link:hover {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(118, 75, 162, 0.3);
         }
 
-    .pagination-modern .page-item.active .page-link {
-        background: linear-gradient(90deg, #4e54c8, #8f94fb);
-        color: white;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    .pagination .page-item.active .page-link {
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border: none;
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(118, 75, 162, 0.3);
     }
+
+
 </style>

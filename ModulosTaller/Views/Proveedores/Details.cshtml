@@ -1,1 +1,140 @@
-﻿
+﻿@model ModulosTaller.Models.Proveedore
+
+@{
+    ViewData["Title"] = "Detalles del Proveedor";
+}
+
+<!-- HEADER -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary fw-bold">Detalles del Proveedor</h2>
+    <a href="@Url.Action("Index")" class="btn btn-gradient-primary shadow-sm">
+        <i class="bi bi-arrow-left-circle me-2"></i> Volver al Listado
+    </a>
+</div>
+
+<!-- INFORMACIÓN DEL PROVEEDOR -->
+<div class="row mb-4">
+    <div class="col-md-6 mb-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">@Model.NombreProveedor</h5>
+                <p class="mb-2"><i class="bi bi-telephone me-2"></i>@(Model.Telefono ?? "Sin teléfono")</p>
+                <p class="mb-2"><i class="bi bi-geo-alt me-2"></i>@(Model.Direccion ?? "Sin dirección")</p>
+                <span class="badge-total">
+                    Compras realizadas: @Model.Compras.Count
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- COMPRAS DEL PROVEEDOR -->
+<div class="mb-4">
+    <h4 class="text-primary fw-bold mb-3">Compras del Proveedor</h4>
+    @if (Model.Compras.Any())
+    {
+        <div class="table-responsive shadow-lg rounded-4 overflow-hidden">
+            <table class="table table-hover align-middle mb-0 table-modern">
+                <thead class="table-header sticky-top">
+                    <tr>
+                        <th><i class="bi bi-hash me-1 text-secondary"></i> ID Compra</th>
+                        <th><i class="bi bi-calendar-event me-1 text-secondary"></i> Fecha</th>
+                        <th><i class="bi bi-box-seam me-1 text-secondary"></i> Productos</th>
+                        <th><i class="bi bi-currency-dollar me-1 text-secondary"></i> Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var compra in Model.Compras)
+                    {
+                        <tr class="@(compra.EstaAnulada ? "row-anulada" : "")">
+                            <td>#@compra.IdCompra</td>
+                            <td>@compra.FechaCompra.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                @foreach (var detalle in compra.CompraDetalles)
+                                {
+                                    <div class="producto-item">
+                                        <i class="bi bi-caret-right-fill text-primary"></i>
+                                        <span>@(detalle.IdProductoNavigation?.NombreProducto ?? "-")</span>
+                                        <small class="text-muted ms-1">x @detalle.Cantidad</small>
+                                        <span class="text-success fw-semibold ms-2">
+                                            @(detalle.PrecioUnitario.ToString("C"))
+                                        </span>
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge-total">
+                                    @compra.CompraDetalles.Sum(d => d.Cantidad * d.PrecioUnitario).ToString("C")
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">Este proveedor aún no tiene compras registradas.</p>
+    }
+</div>
+
+<style>
+    .badge-total {
+        background: linear-gradient(90deg, #007bff, #00c6ff);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 0.85rem;
+        display: inline-block;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .table-modern {
+        border-collapse: separate;
+        border-spacing: 0 8px;
+    }
+
+        .table-modern thead {
+            background: linear-gradient(90deg, #f0f2ff, #e9ecff);
+            font-weight: 600;
+            color: #4e54c8;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .table-modern tbody tr {
+            background: #fff;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+            .table-modern tbody tr:hover {
+                background: #f9faff;
+                transform: scale(1.01);
+                box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            }
+
+        .table-modern td, .table-modern th {
+            padding: 1rem;
+        }
+
+    .producto-item {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 4px 0;
+        border-bottom: 1px dashed #eee;
+    }
+
+        .producto-item:last-child {
+            border-bottom: none;
+        }
+
+    .row-anulada {
+        text-decoration: line-through;
+        opacity: 0.7;
+        background: #fff5f5 !important;
+    }
+</style>
