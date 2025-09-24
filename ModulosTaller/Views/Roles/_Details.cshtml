@@ -1,0 +1,35 @@
+﻿@model ModulosTaller.Models.Role
+
+<div class="mb-3">
+    <h5 class="fw-bold">Nombre del Rol</h5>
+    <p>@Model.NombreRol</p>
+</div>
+
+<div class="mb-3">
+    <h5 class="fw-bold">Descripción</h5>
+    <p>@Model.Descripcion</p>
+</div>
+
+<div class="mb-3">
+    <h5 class="fw-bold">Estado</h5>
+    <span class="badge @(Model.Activo ? "bg-success" : "bg-secondary")">
+        @(Model.Activo ? "Activo" : "Inactivo")
+    </span>
+</div>
+
+<div class="mb-3">
+    <h5 class="fw-bold">Permisos Asignados</h5>
+    @if (Model.Permisos != null && Model.Permisos.Any())
+    {
+        <ul>
+            @foreach (var permiso in Model.Permisos)
+            {
+                <li>@permiso.NombrePermiso</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p class="text-muted">Sin permisos asignados.</p>
+    }
+</div>

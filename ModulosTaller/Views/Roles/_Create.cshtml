@@ -1,0 +1,59 @@
+﻿@model ModulosTaller.Models.Role
+@{
+    ViewData["Title"] = "Crear Rol";
+    var permisos = ViewData["Permisos"] as List<ModulosTaller.Models.Permiso>;
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="NombreRol" class="form-label fw-bold">Nombre del Rol</label>
+        <input asp-for="NombreRol" class="form-control" placeholder="Ej: Administrador" />
+        <span asp-validation-for="NombreRol" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Descripcion" class="form-label fw-bold">Descripción del Rol</label>
+        <textarea asp-for="Descripcion" class="form-control" rows="3" placeholder="Ej: Acceso completo al sistema"></textarea>
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-bold">Permisos disponibles</label>
+        <div class="row">
+            @if (permisos != null && permisos.Any())
+            {
+                foreach (var permiso in permisos)
+                {
+                    <div class="col-md-4 mb-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                                   name="PermisosSeleccionados"
+                                   value="@permiso.IdPermiso"
+                                   id="permiso_@permiso.IdPermiso" />
+                            <label class="form-check-label" for="permiso_@permiso.IdPermiso">
+                                @permiso.NombrePermiso
+                            </label>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12">
+                    <p class="text-muted">No hay permisos registrados en el sistema.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="text-end mt-4">
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-circle me-1"></i> Crear Rol
+        </button>
+    </div>
+</form>

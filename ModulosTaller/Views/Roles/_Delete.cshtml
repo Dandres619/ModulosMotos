@@ -1,0 +1,35 @@
+﻿@model ModulosTaller.Models.Role
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="IdRol" />
+
+    <div class="mb-3">
+        <p>¿Estás seguro que deseas eliminar el rol <strong>@Model.NombreRol</strong>?</p>
+    </div>
+
+    <div class="mb-3">
+        <h6 class="fw-bold">Permisos asignados:</h6>
+        @if (Model.Permisos != null && Model.Permisos.Any())
+        {
+            <ul>
+                @foreach (var permiso in Model.Permisos)
+                {
+                    <li>@permiso.NombrePermiso</li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="text-muted">Sin permisos asignados.</p>
+        }
+    </div>
+
+    <div class="text-end mt-4">
+        <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash"></i> Eliminar
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancelar
+        </button>
+    </div>
+</form>

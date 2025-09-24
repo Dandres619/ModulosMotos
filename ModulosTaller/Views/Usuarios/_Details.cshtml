@@ -1,0 +1,43 @@
+﻿@model ModulosTaller.Models.Usuario
+
+<div class="p-3">
+    <h5 class="text-primary mb-3">
+        <i class="bi bi-person-circle me-2"></i> Detalles del Usuario
+    </h5>
+
+    <dl class="row">
+        <dt class="col-sm-4">Nombre</dt>
+        <dd class="col-sm-8">@Model.Nombre @Model.Apellido</dd>
+
+        <dt class="col-sm-4">Correo</dt>
+        <dd class="col-sm-8">@Model.Correo</dd>
+
+        <dt class="col-sm-4">Barrio</dt>
+        <dd class="col-sm-8">@Model.Barrio</dd>
+
+        <dt class="col-sm-4">Dirección</dt>
+        <dd class="col-sm-8">@Model.Barrio</dd>
+
+        <dt class="col-sm-4">Documento</dt>
+        <dd class="col-sm-8">@Model.TipoDocumento - @Model.NumeroDocumento</dd>
+
+        <dt class="col-sm-4">Fecha de Nacimiento</dt>
+        <dd class="col-sm-8">@Model.FechaNacimiento.ToShortDateString()</dd>
+
+        <dt class="col-sm-4">Rol</dt>
+        <dd class="col-sm-8">@Model.IdRolNavigation?.NombreRol</dd>
+
+        <dt class="col-sm-4">Estado</dt>
+        <dd class="col-sm-8">
+            <span class="badge @(Model.Activo ? "bg-success" : "bg-secondary")">
+                @(Model.Activo ? "Activo" : "Inactivo")
+            </span>
+        </dd>
+    </dl>
+
+    <div class="text-end mt-3">
+        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle me-1"></i> Cerrar
+        </button>
+    </div>
+</div>

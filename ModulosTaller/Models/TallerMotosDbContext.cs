@@ -1,18 +1,13 @@
-﻿using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace ModulosTaller.Models;
 
 public partial class TallerMotosDbContext : DbContext
 {
-    public TallerMotosDbContext()
-    {
-    }
+    public TallerMotosDbContext() { }
 
     public TallerMotosDbContext(DbContextOptions<TallerMotosDbContext> options)
-        : base(options)
-    {
-    }
+        : base(options) { }
 
     public virtual DbSet<Agendamiento> Agendamientos { get; set; }
     public virtual DbSet<CategoriaProducto> CategoriaProductos { get; set; }
@@ -33,32 +28,29 @@ public partial class TallerMotosDbContext : DbContext
     {
         modelBuilder.Entity<Agendamiento>(entity =>
         {
-            entity.HasKey(e => e.IdAgendamiento).HasName("PK__Agendami__8516393DC4B8E90B");
-            entity.Property(e => e.Descripcion).HasMaxLength(200);
+            entity.HasKey(e => e.IdAgendamiento);
             entity.Property(e => e.Fecha).HasColumnType("datetime");
+            entity.Property(e => e.Descripcion).HasMaxLength(200);
 
             entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.Agendamientos)
-                .HasForeignKey(d => d.IdCliente)
-                .HasConstraintName("FK__Agendamie__IdCli__59FA5E80");
+                .HasForeignKey(d => d.IdCliente);
 
             entity.HasOne(d => d.IdHorarioNavigation).WithMany(p => p.Agendamientos)
-                .HasForeignKey(d => d.IdHorario)
-                .HasConstraintName("FK__Agendamie__IdHor__5BE2A6F2");
+                .HasForeignKey(d => d.IdHorario);
 
             entity.HasOne(d => d.IdMotoNavigation).WithMany(p => p.Agendamientos)
-                .HasForeignKey(d => d.IdMoto)
-                .HasConstraintName("FK__Agendamie__IdMot__5AEE82B9");
+                .HasForeignKey(d => d.IdMoto);
         });
 
         modelBuilder.Entity<CategoriaProducto>(entity =>
         {
-            entity.HasKey(e => e.IdCategoria).HasName("PK__Categori__A3C02A1030306DE5");
+            entity.HasKey(e => e.IdCategoria);
             entity.Property(e => e.NombreCategoria).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Cliente>(entity =>
         {
-            entity.HasKey(e => e.IdCliente).HasName("PK__Clientes__D594664212B0B659");
+            entity.HasKey(e => e.IdCliente);
 
             entity.Property(e => e.TipoDocumento)
                 .HasMaxLength(10)
@@ -103,140 +95,127 @@ public partial class TallerMotosDbContext : DbContext
 
         modelBuilder.Entity<Compra>(entity =>
         {
-            entity.HasKey(e => e.IdCompra).HasName("PK__Compras__0A5CDB5C716AAA18");
+            entity.HasKey(e => e.IdCompra);
             entity.Property(e => e.FechaCompra)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
 
             entity.HasOne(d => d.IdProveedorNavigation).WithMany(p => p.Compras)
-                .HasForeignKey(d => d.IdProveedor)
-                .HasConstraintName("FK__Compras__IdProve__4BAC3F29");
+                .HasForeignKey(d => d.IdProveedor);
         });
 
         modelBuilder.Entity<CompraDetalle>(entity =>
         {
-            entity.HasKey(e => e.IdCompraDetalle).HasName("PK__CompraDe__A1B840C5C2BC30EF");
+            entity.HasKey(e => e.IdCompraDetalle);
             entity.ToTable("CompraDetalle");
             entity.Property(e => e.PrecioUnitario).HasColumnType("decimal(10, 2)");
 
             entity.HasOne(d => d.IdCompraNavigation).WithMany(p => p.CompraDetalles)
-                .HasForeignKey(d => d.IdCompra)
-                .HasConstraintName("FK__CompraDet__IdCom__4E88ABD4");
+                .HasForeignKey(d => d.IdCompra);
 
             entity.HasOne(d => d.IdProductoNavigation).WithMany(p => p.CompraDetalles)
-                .HasForeignKey(d => d.IdProducto)
-                .HasConstraintName("FK__CompraDet__IdPro__4F7CD00D");
+                .HasForeignKey(d => d.IdProducto);
         });
 
         modelBuilder.Entity<Horario>(entity =>
         {
-            entity.HasKey(e => e.IdHorario).HasName("PK__Horarios__1539229B0F26AE6A");
+            entity.HasKey(e => e.IdHorario);
             entity.Property(e => e.DiaSemana).HasMaxLength(20);
         });
 
         modelBuilder.Entity<Motocicleta>(entity =>
         {
-            entity.HasKey(e => e.IdMoto).HasName("PK__Motocicl__33CED5FBEDA1A059");
-            entity.HasIndex(e => e.Placa, "UQ__Motocicl__8310F99D2178C770").IsUnique();
+            entity.HasKey(e => e.IdMoto);
+            entity.HasIndex(e => e.Placa).IsUnique();
             entity.Property(e => e.Marca).HasMaxLength(50);
             entity.Property(e => e.Modelo).HasMaxLength(50);
             entity.Property(e => e.Placa).HasMaxLength(20);
 
             entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.Motocicleta)
-                .HasForeignKey(d => d.IdCliente)
-                .HasConstraintName("FK__Motocicle__IdCli__5535A963");
+                .HasForeignKey(d => d.IdCliente);
         });
 
         modelBuilder.Entity<Permiso>(entity =>
         {
-            entity.HasKey(e => e.IdPermiso).HasName("PK__Permisos__0D626EC88C70CD31");
+            entity.HasKey(e => e.IdPermiso);
             entity.Property(e => e.NombrePermiso).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Producto>(entity =>
         {
-            entity.HasKey(e => e.IdProducto).HasName("PK__Producto__09889210FAD937BE");
+            entity.HasKey(e => e.IdProducto);
             entity.Property(e => e.NombreProducto).HasMaxLength(100);
             entity.Property(e => e.Precio).HasColumnType("decimal(10, 2)");
 
             entity.HasOne(d => d.IdCategoriaNavigation).WithMany(p => p.Productos)
-                .HasForeignKey(d => d.IdCategoria)
-                .HasConstraintName("FK__Productos__IdCat__45F365D3");
+                .HasForeignKey(d => d.IdCategoria);
         });
 
         modelBuilder.Entity<Proveedore>(entity =>
         {
-            entity.HasKey(e => e.IdProveedor).HasName("PK__Proveedo__E8B631AF3DEC2399");
-            entity.Property(e => e.Direccion).HasMaxLength(200);
+            entity.HasKey(e => e.IdProveedor);
             entity.Property(e => e.NombreProveedor).HasMaxLength(100);
+            entity.Property(e => e.Direccion).HasMaxLength(200);
             entity.Property(e => e.Telefono).HasMaxLength(20);
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.IdRol).HasName("PK__Roles__2A49584C9AE85A0A");
+            entity.HasKey(e => e.IdRol);
             entity.Property(e => e.NombreRol).HasMaxLength(50);
+            entity.Property(e => e.Activo).HasDefaultValue(true);
 
-            entity.HasMany(d => d.IdPermisos).WithMany(p => p.IdRols)
+            // Relación muchos-a-muchos con Permisos
+            entity.HasMany(r => r.Permisos)
+                .WithMany(p => p.Roles)
                 .UsingEntity<Dictionary<string, object>>(
                     "RolPermiso",
-                    r => r.HasOne<Permiso>().WithMany()
-                        .HasForeignKey("IdPermiso")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__RolPermis__IdPer__3C69FB99"),
-                    l => l.HasOne<Role>().WithMany()
-                        .HasForeignKey("IdRol")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__RolPermis__IdRol__3B75D760"),
+                    r => r.HasOne<Permiso>().WithMany().HasForeignKey("IdPermiso").OnDelete(DeleteBehavior.ClientSetNull),
+                    p => p.HasOne<Role>().WithMany().HasForeignKey("IdRol").OnDelete(DeleteBehavior.ClientSetNull),
                     j =>
                     {
-                        j.HasKey("IdRol", "IdPermiso").HasName("PK__RolPermi__BA9F7EA063D4DD87");
+                        j.HasKey("IdRol", "IdPermiso");
                         j.ToTable("RolPermiso");
                     });
         });
 
         modelBuilder.Entity<Usuario>(entity =>
         {
-            entity.HasKey(e => e.IdUsuario).HasName("PK__Usuarios__5B65BF97AE0A9458");
-            entity.HasIndex(e => e.Correo, "UQ__Usuarios__60695A19A7DCDF4A").IsUnique();
-            entity.Property(e => e.Clave).HasMaxLength(200);
-            entity.Property(e => e.Correo).HasMaxLength(100);
+            entity.HasKey(e => e.IdUsuario);
+            entity.HasIndex(e => e.Correo, "UQ__Usuarios__Correo").IsUnique();
             entity.Property(e => e.Nombre).HasMaxLength(100);
+            entity.Property(e => e.Correo).HasMaxLength(100);
+            entity.Property(e => e.Clave).HasMaxLength(200);
 
             entity.HasOne(d => d.IdRolNavigation).WithMany(p => p.Usuarios)
-                .HasForeignKey(d => d.IdRol)
-                .HasConstraintName("FK__Usuarios__IdRol__403A8C7D");
+                .HasForeignKey(d => d.IdRol);
         });
 
         modelBuilder.Entity<Venta>(entity =>
         {
-            entity.HasKey(e => e.IdVenta).HasName("PK__Ventas__BC1240BDFC61093A");
+            entity.HasKey(e => e.IdVenta);
             entity.Property(e => e.FechaVenta)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
 
             entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.Venta)
-                .HasForeignKey(d => d.IdCliente)
-                .HasConstraintName("FK__Ventas__IdClient__5FB337D6");
+                .HasForeignKey(d => d.IdCliente);
 
             entity.HasOne(d => d.IdCompraNavigation).WithMany(p => p.Venta)
-                .HasForeignKey(d => d.IdCompra)
-                .HasConstraintName("FK__Ventas__IdCompra__60A75C0F");
+                .HasForeignKey(d => d.IdCompra);
         });
 
         modelBuilder.Entity<VentaDetalle>(entity =>
         {
-            entity.HasKey(e => e.IdVentaDetalle).HasName("PK__VentaDet__2787211D41EF6E96");
+            entity.HasKey(e => e.IdVentaDetalle);
             entity.ToTable("VentaDetalle");
             entity.Property(e => e.PrecioUnitario).HasColumnType("decimal(10, 2)");
 
             entity.HasOne(d => d.IdProductoNavigation).WithMany(p => p.VentaDetalles)
-                .HasForeignKey(d => d.IdProducto)
-                .HasConstraintName("FK__VentaDeta__IdPro__6477ECF3");
+                .HasForeignKey(d => d.IdProducto);
 
             entity.HasOne(d => d.IdVentaNavigation).WithMany(p => p.VentaDetalles)
-                .HasForeignKey(d => d.IdVenta)
-                .HasConstraintName("FK__VentaDeta__IdVen__6383C8BA");
+                .HasForeignKey(d => d.IdVenta);
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -1,0 +1,153 @@
+﻿@model List<ModulosTaller.Models.Usuario>
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold text-primary mb-1">Usuarios (@Model.Count)</h4>
+            <p class="text-muted mb-0">Gestiona los usuarios del sistema</p>
+        </div>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrearUsuario">
+            <i class="bi bi-person-plus me-1"></i> Nuevo Usuario
+        </button>
+    </div>
+
+    <div class="table-responsive shadow-sm">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Usuario</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var u in Model)
+                {
+                    <tr>
+                        <td>@u.Nombre @u.Apellido</td>
+                        <td>@u.Correo</td>
+                        <td>@u.IdRolNavigation?.NombreRol</td>
+                        <td>
+                            <button class="btn btn-sm toggle-estado @(u.Activo ? "btn-success" : "btn-secondary")"
+                                    data-id="@u.IdUsuario"
+                                    data-estado="@u.Activo">
+                                @(u.Activo ? "Activo" : "Inactivo")
+                            </button>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-info me-1 btn-detalles" data-id="@u.IdUsuario" title="Ver">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-warning me-1 btn-editar" data-id="@u.IdUsuario" title="Editar">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger btn-eliminar" data-id="@u.IdUsuario" title="Eliminar">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled"><a class="page-link">Anterior</a></li>
+            <li class="page-item active"><a class="page-link">1</a></li>
+            <li class="page-item"><a class="page-link">2</a></li>
+            <li class="page-item"><a class="page-link">3</a></li>
+            <li class="page-item"><a class="page-link">Siguiente</a></li>
+        </ul>
+    </nav>
+</div>
+
+<!-- Modales -->
+<div class="modal fade" id="modalCrearUsuario" tabindex="-1" aria-labelledby="modalCrearUsuarioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalCrearUsuarioLabel">Crear Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                @await Html.PartialAsync("_Create", new ModulosTaller.Models.Usuario())
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEditarUsuario" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body" id="contenidoEditarUsuario"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalDetallesUsuario" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body" id="contenidoDetallesUsuario"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEliminarUsuario" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" id="contenidoEliminarUsuario"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".toggle-estado").click(function () {
+                var btn = $(this);
+                var id = btn.data("id");
+                var estadoActual = btn.data("estado");
+                var nuevoEstado = !estadoActual;
+
+                $.ajax({
+                    url: "/Usuarios/CambiarEstado",
+                    method: "POST",
+                    data: { id: id, activo: nuevoEstado },
+                    success: function () {
+                        btn.data("estado", nuevoEstado);
+                        btn.removeClass("btn-success btn-secondary");
+                        btn.addClass(nuevoEstado ? "btn-success" : "btn-secondary");
+                        btn.text(nuevoEstado ? "Activo" : "Inactivo");
+                    },
+                    error: function () {
+                        alert("Error al cambiar el estado del usuario.");
+                    }
+                });
+            });
+
+            $(".btn-editar").click(function () {
+                var id = $(this).data("id");
+                $("#contenidoEditarUsuario").load("/Usuarios/Edit/" + id);
+                $("#modalEditarUsuario").modal("show");
+            });
+
+            $(".btn-detalles").click(function () {
+                var id = $(this).data("id");
+                $("#contenidoDetallesUsuario").load("/Usuarios/Details/" + id);
+                $("#modalDetallesUsuario").modal("show");
+            });
+
+            $(".btn-eliminar").click(function () {
+                var id = $(this).data("id");
+                $("#contenidoEliminarUsuario").load("/Usuarios/Delete/" + id);
+                $("#modalEliminarUsuario").modal("show");
+            });
+        });
+    </script>
+}
