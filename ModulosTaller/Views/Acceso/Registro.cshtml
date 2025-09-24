@@ -1,0 +1,115 @@
+﻿@model ModulosTaller.Models.Usuario
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Registro de Usuario";
+}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="card shadow-lg" style="width: 100%; max-width: 600px;">
+        <div class="card-body">
+            <h4 class="text-center text-primary mb-4">
+                <i class="bi bi-person-plus me-2"></i> @ViewData["Title"]
+            </h4>
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger text-center">
+                    @TempData["Error"]
+                </div>
+            }
+
+            <form asp-action="Registro" method="post" onsubmit="return validarContraseñas();">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Tipo de Documento</label>
+                        <select asp-for="TipoDocumento" class="form-select" required>
+                            <option value="">Seleccione...</option>
+                            <option value="CC">Cédula de Ciudadanía</option>
+                            <option value="TI">Tarjeta de Identidad</option>
+                            <option value="CE">Cédula de Extranjería</option>
+                            <option value="PA">Pasaporte</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Número de Documento</label>
+                        <input asp-for="NumeroDocumento" class="form-control" required />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input asp-for="Nombre" class="form-control" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Apellido</label>
+                        <input asp-for="Apellido" class="form-control" required />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Fecha de Nacimiento</label>
+                        <input asp-for="FechaNacimiento" type="date" class="form-control" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Dirección</label>
+                        <input asp-for="Barrio" class="form-control" required />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Teléfono</label>
+                        <input asp-for="Telefono" class="form-control" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Correo</label>
+                        <input asp-for="Correo" class="form-control" required />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Contraseña</label>
+                        <input asp-for="Clave" type="password" class="form-control" id="clave" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Confirmar Contraseña</label>
+                        <input type="password" class="form-control" id="confirmarClave" required />
+                    </div>
+                </div>
+
+                <div id="mensajeError" class="text-danger mb-3" style="display: none;">
+                    Las contraseñas deben ser iguales.
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save me-1"></i> Registrarse
+                    </button>
+
+                    <a asp-controller="Acceso" asp-action="Login" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-1"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function validarContraseñas() {
+        const clave = document.getElementById("clave").value;
+        const confirmar = document.getElementById("confirmarClave").value;
+        const mensaje = document.getElementById("mensajeError");
+
+        if (clave !== confirmar) {
+            mensaje.style.display = "block";
+            return false;
+        }
+
+        mensaje.style.display = "none";
+        return true;
+    }
+</script>

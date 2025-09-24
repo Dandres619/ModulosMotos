@@ -1,0 +1,147 @@
+﻿@model ModulosTaller.Models.DashboardViewModel
+
+<div class="container mt-4">
+    <h2 class="text-primary fw-bold text-center">Bienvenido, @Model.NombreUsuario</h2>
+    <p class="text-muted text-center">Resumen general del taller</p>
+
+    <!-- MÉTRICAS PRINCIPALES -->
+    <div class="row text-center mt-4">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Citas Agendadas</h6>
+                    <h3 class="text-primary">24</h3>
+                    <small class="text-success">↑ 2 desde el mes pasado</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Motos en Servicio</h6>
+                    <h3 class="text-warning">8</h3>
+                    <small class="text-danger">↓ 3 desde el mes pasado</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Entregas Realizadas</h6>
+                    <h3 class="text-success">16</h3>
+                    <small class="text-success">↑ 4 desde el mes pasado</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Ventas del Mes</h6>
+                    <h3 class="text-dark">$48,500</h3>
+                    <small class="text-success">↑ $3,200 desde el mes pasado</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ESTADO DE MOTOS EN SERVICIO -->
+    <div class="mt-5">
+        <h5 class="fw-bold text-secondary">Estado de Motocicletas en Servicio</h5>
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Honda CB600F - Mantenimiento General
+                <span class="badge bg-primary rounded-pill">75%</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Yamaha R6 - Reparación Motor
+                <span class="badge bg-warning text-dark rounded-pill">45%</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Suzuki GSX-R - Cambio Llantas
+                <span class="badge bg-success rounded-pill">90%</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Kawasaki Ninja - Revisión Frenos
+                <span class="badge bg-danger rounded-pill">30%</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- CITAS DE HOY -->
+    <div class="mt-5">
+        <h5 class="fw-bold text-secondary">Citas de Hoy</h5>
+        <table class="table table-bordered table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Cliente</th>
+                    <th>Motocicleta</th>
+                    <th>Hora</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Juan Pérez</td>
+                    <td>Honda CB600F</td>
+                    <td>10:00 AM</td>
+                    <td><span class="badge bg-info text-dark">En progreso</span></td>
+                </tr>
+                <tr>
+                    <td>María García</td>
+                    <td>Yamaha R6</td>
+                    <td>11:30 AM</td>
+                    <td><span class="badge bg-warning text-dark">Pendiente</span></td>
+                </tr>
+                <tr>
+                    <td>Carlos López</td>
+                    <td>Suzuki GSX-R</td>
+                    <td>2:00 PM</td>
+                    <td><span class="badge bg-success">Completado</span></td>
+                </tr>
+                <tr>
+                    <td>Ana Rodríguez</td>
+                    <td>Kawasaki Ninja</td>
+                    <td>3:30 PM</td>
+                    <td><span class="badge bg-warning text-dark">Pendiente</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- OBSERVACIONES DE TÉCNICOS -->
+    <div class="mt-5">
+        <h5 class="fw-bold text-secondary">Observaciones Recientes de Técnicos</h5>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card border-danger">
+                    <div class="card-body">
+                        <h6 class="fw-bold">Honda CB600F</h6>
+                        <p class="mb-1">🔧 Revisar frenos traseros</p>
+                        <small class="text-muted">Técnico: Miguel Torres</small><br />
+                        <span class="badge bg-danger mt-2">Prioridad: Alta</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card border-warning">
+                    <div class="card-body">
+                        <h6 class="fw-bold">Yamaha R6</h6>
+                        <p class="mb-1">🛢️ Cambio de aceite programado</p>
+                        <small class="text-muted">Técnico: Roberto Silva</small><br />
+                        <span class="badge bg-warning text-dark mt-2">Prioridad: Media</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card border-success">
+                    <div class="card-body">
+                        <h6 class="fw-bold">Suzuki GSX-R</h6>
+                        <p class="mb-1">✅ Inspección general completada</p>
+                        <small class="text-muted">Técnico: Carlos Méndez</small><br />
+                        <span class="badge bg-success mt-2">Prioridad: Baja</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
