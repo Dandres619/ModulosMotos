@@ -23,7 +23,7 @@ namespace ModulosTaller.Controllers
         // GET: Clientes - CORREGIDO: Mostrar todos los clientes, no solo los activos
         public async Task<IActionResult> Index()
         {
-            var clientes = await _context.Clientes.ToListAsync(); // Removido el filtro .Where(c => c.Estado)
+            var clientes = await _context.Clientes.ToListAsync();
             return View(clientes);
         }
 
@@ -36,7 +36,7 @@ namespace ModulosTaller.Controllers
             }
 
             var cliente = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.IdCliente == id); // Removido && m.Estado
+                .FirstOrDefaultAsync(m => m.IdCliente == id);
 
             if (cliente == null)
             {
@@ -110,7 +110,7 @@ namespace ModulosTaller.Controllers
             }
 
             var cliente = await _context.Clientes.FindAsync(id);
-            if (cliente == null) // Removido || !cliente.Estado
+            if (cliente == null)
             {
                 return NotFound();
             }
@@ -179,7 +179,7 @@ namespace ModulosTaller.Controllers
             return View(cliente);
         }
 
-        // GET: Clientes/Delete/5 - CORREGIDO: Remover filtro por estado
+        // GET: Clientes/Delete/5 - MODIFICADO: Verificar estado antes de permitir eliminación
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -188,17 +188,24 @@ namespace ModulosTaller.Controllers
             }
 
             var cliente = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.IdCliente == id); // Removido && m.Estado
+                .FirstOrDefaultAsync(m => m.IdCliente == id);
 
             if (cliente == null)
             {
                 return NotFound();
             }
 
+            // Verificar si el cliente está activo
+            if (cliente.Estado)
+            {
+                TempData["ErrorMessage"] = "No se puede eliminar un cliente activo. Primero debe marcarlo como inactivo.";
+                return RedirectToAction(nameof(Index));
+            }
+
             return View(cliente);
         }
 
-        // POST: Clientes/Delete/5
+        // POST: Clientes/Delete/5 - MODIFICADO: Eliminar físicamente solo si está inactivo
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -206,11 +213,60 @@ namespace ModulosTaller.Controllers
             var cliente = await _context.Clientes.FindAsync(id);
             if (cliente != null)
             {
-                // Soft delete - cambiar estado a false en lugar de eliminar
+                // Verificar si el cliente está activo
+                if (cliente.Estado)
+                {
+                    TempData["ErrorMessage"] = "No se puede eliminar un cliente activo. Primero debe marcarlo como inactivo.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                // Eliminar físicamente solo si está inactivo
+                _context.Clientes.Remove(cliente);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Cliente eliminado permanentemente exitosamente";
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Clientes/Inactivar/5 - NUEVO: Método para inactivar clientes
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Inactivar(int id)
+        {
+            var cliente = await _context.Clientes.FindAsync(id);
+            if (cliente != null)
+            {
+                // Soft delete - cambiar estado a false
                 cliente.Estado = false;
                 _context.Update(cliente);
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Cliente marcado como inactivo exitosamente";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Cliente no encontrado";
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Clientes/Activar/5 - NUEVO: Método para reactivar clientes
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Activar(int id)
+        {
+            var cliente = await _context.Clientes.FindAsync(id);
+            if (cliente != null)
+            {
+                cliente.Estado = true;
+                _context.Update(cliente);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Cliente reactivado exitosamente";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Cliente no encontrado";
             }
 
             return RedirectToAction(nameof(Index));
