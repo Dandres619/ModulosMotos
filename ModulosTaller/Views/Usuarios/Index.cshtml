@@ -4,25 +4,31 @@
 }
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h4 class="fw-bold text-primary mb-1">Usuarios (@Model.Count)</h4>
-            <p class="text-muted mb-0">Gestiona los usuarios del sistema</p>
+    <!-- Encabezado visual -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+                <h4 class="fw-bold text-primary mb-1">
+                    <i class="bi bi-people-fill me-2"></i> Usuarios (@Model.Count)
+                </h4>
+                <p class="text-muted mb-0">Gestiona los usuarios del sistema</p>
+            </div>
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalCrearUsuario">
+                <i class="bi bi-person-plus me-1"></i> Nuevo Usuario
+            </button>
         </div>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrearUsuario">
-            <i class="bi bi-person-plus me-1"></i> Nuevo Usuario
-        </button>
     </div>
 
+    <!-- Tabla de usuarios -->
     <div class="table-responsive shadow-sm">
         <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>Usuario</th>
-                    <th>Correo</th>
-                    <th>Rol</th>
-                    <th>Estado</th>
-                    <th class="text-center">Acciones</th>
+                    <th><i class="bi bi-person"></i> Usuario</th>
+                    <th><i class="bi bi-envelope"></i> Correo</th>
+                    <th><i class="bi bi-shield-lock"></i> Rol</th>
+                    <th><i class="bi bi-toggle-on"></i> Estado</th>
+                    <th class="text-center"><i class="bi bi-gear"></i> Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,22 +39,25 @@
                         <td>@u.Correo</td>
                         <td>@u.IdRolNavigation?.NombreRol</td>
                         <td>
-                            <button class="btn btn-sm toggle-estado @(u.Activo ? "btn-success" : "btn-secondary")"
+                            <button class="btn btn-sm toggle-estado @(u.Activo ? "btn-outline-success" : "btn-outline-secondary")"
                                     data-id="@u.IdUsuario"
                                     data-estado="@u.Activo">
+                                <i class="bi @(u.Activo ? "bi-check-circle" : "bi-x-circle") me-1"></i>
                                 @(u.Activo ? "Activo" : "Inactivo")
                             </button>
                         </td>
                         <td class="text-center">
-                            <button class="btn btn-sm btn-outline-info me-1 btn-detalles" data-id="@u.IdUsuario" title="Ver">
-                                <i class="bi bi-eye"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-warning me-1 btn-editar" data-id="@u.IdUsuario" title="Editar">
-                                <i class="bi bi-pencil"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger btn-eliminar" data-id="@u.IdUsuario" title="Eliminar">
-                                <i class="bi bi-trash"></i>
-                            </button>
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-sm btn-outline-info btn-detalles" data-id="@u.IdUsuario" title="Ver">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-warning btn-editar" data-id="@u.IdUsuario" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger btn-eliminar" data-id="@u.IdUsuario" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -56,6 +65,7 @@
         </table>
     </div>
 
+    <!-- Paginación -->
     <nav class="mt-4">
         <ul class="pagination justify-content-center">
             <li class="page-item disabled"><a class="page-link">Anterior</a></li>
@@ -72,7 +82,9 @@
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="modalCrearUsuarioLabel">Crear Usuario</h5>
+                <h5 class="modal-title" id="modalCrearUsuarioLabel">
+                    <i class="bi bi-person-plus me-2"></i> Crear Usuario
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
@@ -121,9 +133,9 @@
                     data: { id: id, activo: nuevoEstado },
                     success: function () {
                         btn.data("estado", nuevoEstado);
-                        btn.removeClass("btn-success btn-secondary");
-                        btn.addClass(nuevoEstado ? "btn-success" : "btn-secondary");
-                        btn.text(nuevoEstado ? "Activo" : "Inactivo");
+                        btn.removeClass("btn-outline-success btn-outline-secondary");
+                        btn.addClass(nuevoEstado ? "btn-outline-success" : "btn-outline-secondary");
+                        btn.html(`<i class="bi ${nuevoEstado ? 'bi-check-circle' : 'bi-x-circle'} me-1"></i> ${nuevoEstado ? 'Activo' : 'Inactivo'}`);
                     },
                     error: function () {
                         alert("Error al cambiar el estado del usuario.");

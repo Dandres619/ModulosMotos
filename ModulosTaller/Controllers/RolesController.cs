@@ -13,16 +13,18 @@ namespace ModulosTaller.Controllers
             _context = context;
         }
 
+        // Vista principal
         public IActionResult Index()
         {
             var roles = _context.Roles
                 .Include(r => r.Permisos)
                 .ToList();
 
-            ViewData["Permisos"] = _context.Permisos.ToList(); // ✅ para el modal de creación
+            ViewData["Permisos"] = _context.Permisos.ToList();
             return View(roles);
         }
 
+        // Modal: Crear Rol
         public IActionResult Create()
         {
             ViewData["Permisos"] = _context.Permisos.ToList();
@@ -48,6 +50,22 @@ namespace ModulosTaller.Controllers
             return PartialView("_Create", rol);
         }
 
+        // Modal: Crear Permiso
+        [HttpPost]
+        public IActionResult CrearPermiso(Permiso permiso)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Permisos.Add(permiso);
+                _context.SaveChanges();
+                TempData["Toast"] = "Permiso creado correctamente";
+                return RedirectToAction("Index");
+            }
+
+            return PartialView("_CreatePermiso", permiso);
+        }
+
+        // Modal: Detalles
         public IActionResult Details(int id)
         {
             var rol = _context.Roles
@@ -58,6 +76,7 @@ namespace ModulosTaller.Controllers
             return PartialView("_Details", rol);
         }
 
+        // Modal: Editar
         public IActionResult Edit(int id)
         {
             var rol = _context.Roles
@@ -99,6 +118,7 @@ namespace ModulosTaller.Controllers
             return PartialView("_Edit", rol);
         }
 
+        // Modal: Eliminar
         public IActionResult Delete(int id)
         {
             var rol = _context.Roles.Find(id);
@@ -122,6 +142,7 @@ namespace ModulosTaller.Controllers
             return RedirectToAction("Index");
         }
 
+        // AJAX: Cambiar estado activo/inactivo
         [HttpPost]
         public IActionResult CambiarEstado(int id, bool activo)
         {

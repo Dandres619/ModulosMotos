@@ -1,0 +1,63 @@
+﻿@model int // Id del rol
+
+@inject TallerMotosDbContext _context
+
+@{
+    var permisosAsignados = _context.RolPermisos
+        .Where(rp => rp.IdRol == Model)
+        .Select(rp => rp.Permiso)
+        .ToList();
+
+    var todosLosPermisos = _context.Permisos.ToList();
+}
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+        <i class="bi bi-shield-lock me-2"></i> Permisos asignados al rol
+    </div>
+    <div class="card-body">
+        @if (permisosAsignados.Any())
+        {
+            <ul class="list-group mb-3">
+                @foreach (var permiso in permisosAsignados)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        @permiso.NombrePermiso
+                        <form asp-action="QuitarPermiso" asp-controller="Roles" method="post" class="d-inline">
+                            <input type="hidden" name="idRol" value="@Model" />
+                            <input type="hidden" name="idPermiso" value="@permiso.IdPermiso" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-x-circle"></i> Quitar
+                            </button>
+                        </form>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <div class="alert alert-info text-center">
+                Este rol no tiene permisos asignados aún.
+            </div>
+        }
+
+        <h6 class="text-success mb-2">Agregar nuevo permiso</h6>
+        <form asp-action="AgregarPermiso" asp-controller="Roles" method="post" class="row g-2">
+            <input type="hidden" name="idRol" value="@Model" />
+            <div class="col-md-9">
+                <select name="idPermiso" class="form-select" required>
+                    <option value="">Seleccione un permiso...</option>
+                    @foreach (var permiso in todosLosPermisos.Where(p => !permisosAsignados.Any(pa => pa.IdPermiso == p.IdPermiso)))
+                    {
+                        <option value="@permiso.IdPermiso">@permiso.NombrePermiso</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-success w-100">
+                    <i class="bi bi-plus-circle"></i> Agregar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

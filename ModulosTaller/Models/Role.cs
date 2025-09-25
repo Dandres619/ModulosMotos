@@ -19,6 +19,9 @@ public partial class Role
 
     public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
 
-    // ✅ Relación muchos-a-muchos con permisos
+    // Relación directa con permisos (opcional si usas RolPermiso)
     public virtual ICollection<Permiso> Permisos { get; set; } = new List<Permiso>();
+
+    // ✅ Relación explícita con RolPermiso
+    public virtual ICollection<RolPermiso> RolPermisos { get; set; } = new List<RolPermiso>();
 }

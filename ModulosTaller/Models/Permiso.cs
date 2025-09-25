@@ -12,4 +12,7 @@ public partial class Permiso
     public string NombrePermiso { get; set; } = string.Empty;
 
     public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
+
+    // ✅ Relación explícita con RolPermiso
+    public virtual ICollection<RolPermiso> RolPermisos { get; set; } = new List<RolPermiso>();
 }

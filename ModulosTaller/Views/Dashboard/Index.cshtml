@@ -1,23 +1,27 @@
 ﻿@model ModulosTaller.Models.DashboardViewModel
 
 <div class="container mt-4">
-    <h2 class="text-primary fw-bold text-center">Bienvenido, @Model.NombreUsuario</h2>
+    <h2 class="text-center fw-bold text-primary">
+        <i class="bi bi-speedometer2 me-2"></i> Bienvenido, @Model.NombreUsuario
+    </h2>
     <p class="text-muted text-center">Resumen general del taller</p>
 
     <!-- MÉTRICAS PRINCIPALES -->
     <div class="row text-center mt-4">
         <div class="col-md-3 mb-3">
-            <div class="card shadow-sm">
+            <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h6 class="text-muted">Total Citas Agendadas</h6>
+                    <i class="bi bi-calendar-check text-primary fs-4 mb-2"></i>
+                    <h6 class="text-muted">Citas Agendadas</h6>
                     <h3 class="text-primary">24</h3>
                     <small class="text-success">↑ 2 desde el mes pasado</small>
                 </div>
             </div>
         </div>
         <div class="col-md-3 mb-3">
-            <div class="card shadow-sm">
+            <div class="card border-0 shadow-sm">
                 <div class="card-body">
+                    <i class="bi bi-tools text-warning fs-4 mb-2"></i>
                     <h6 class="text-muted">Motos en Servicio</h6>
                     <h3 class="text-warning">8</h3>
                     <small class="text-danger">↓ 3 desde el mes pasado</small>
@@ -25,8 +29,9 @@
             </div>
         </div>
         <div class="col-md-3 mb-3">
-            <div class="card shadow-sm">
+            <div class="card border-0 shadow-sm">
                 <div class="card-body">
+                    <i class="bi bi-truck text-success fs-4 mb-2"></i>
                     <h6 class="text-muted">Entregas Realizadas</h6>
                     <h3 class="text-success">16</h3>
                     <small class="text-success">↑ 4 desde el mes pasado</small>
@@ -34,49 +39,34 @@
             </div>
         </div>
         <div class="col-md-3 mb-3">
-            <div class="card shadow-sm">
+            <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h6 class="text-muted">Ventas del Mes</h6>
-                    <h3 class="text-dark">$48,500</h3>
-                    <small class="text-success">↑ $3,200 desde el mes pasado</small>
+                    <i class="bi bi-cash-coin text-dark fs-4 mb-2"></i>
+                    <h6 class="text-muted">Ventas</h6>
+                    <div class="btn-group mb-2" role="group">
+                        <button type="button" class="btn btn-outline-primary btn-sm active" onclick="mostrarVentas('mes')">Mes</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="mostrarVentas('semana')">Semana</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="mostrarVentas('dia')">Día</button>
+                    </div>
+                    <h3 id="valorVentas" class="text-dark">$48,500</h3>
+                    <small id="detalleVentas" class="text-success">↑ $3,200 desde el mes pasado</small>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ESTADO DE MOTOS EN SERVICIO -->
-    <div class="mt-5">
-        <h5 class="fw-bold text-secondary">Estado de Motocicletas en Servicio</h5>
-        <ul class="list-group">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Honda CB600F - Mantenimiento General
-                <span class="badge bg-primary rounded-pill">75%</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Yamaha R6 - Reparación Motor
-                <span class="badge bg-warning text-dark rounded-pill">45%</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Suzuki GSX-R - Cambio Llantas
-                <span class="badge bg-success rounded-pill">90%</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Kawasaki Ninja - Revisión Frenos
-                <span class="badge bg-danger rounded-pill">30%</span>
-            </li>
-        </ul>
-    </div>
-
     <!-- CITAS DE HOY -->
     <div class="mt-5">
-        <h5 class="fw-bold text-secondary">Citas de Hoy</h5>
+        <h5 class="fw-bold text-secondary">
+            <i class="bi bi-clock-history me-2"></i> Citas de Hoy
+        </h5>
         <table class="table table-bordered table-hover">
             <thead class="table-light">
                 <tr>
-                    <th>Cliente</th>
-                    <th>Motocicleta</th>
-                    <th>Hora</th>
-                    <th>Estado</th>
+                    <th><i class="bi bi-person"></i> Cliente</th>
+                    <th><i class="bi bi-bicycle"></i> Motocicleta</th>
+                    <th><i class="bi bi-clock"></i> Hora</th>
+                    <th><i class="bi bi-activity"></i> Estado</th>
                 </tr>
             </thead>
             <tbody>
@@ -110,7 +100,9 @@
 
     <!-- OBSERVACIONES DE TÉCNICOS -->
     <div class="mt-5">
-        <h5 class="fw-bold text-secondary">Observaciones Recientes de Técnicos</h5>
+        <h5 class="fw-bold text-secondary">
+            <i class="bi bi-chat-left-text me-2"></i> Observaciones Recientes de Técnicos
+        </h5>
         <div class="row">
             <div class="col-md-4 mb-3">
                 <div class="card border-danger">
@@ -145,3 +137,29 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function mostrarVentas(periodo) {
+            const valor = document.getElementById("valorVentas");
+            const detalle = document.getElementById("detalleVentas");
+
+            if (periodo === "mes") {
+                valor.textContent = "$48,500";
+                detalle.textContent = "↑ $3,200 desde el mes pasado";
+                detalle.className = "text-success";
+            } else if (periodo === "semana") {
+                valor.textContent = "$12,300";
+                detalle.textContent = "↑ $800 desde la semana pasada";
+                detalle.className = "text-success";
+            } else if (periodo === "dia") {
+                valor.textContent = "$1,750";
+                detalle.textContent = "↓ $150 respecto a ayer";
+                detalle.className = "text-danger";
+            }
+
+            document.querySelectorAll(".btn-group .btn").forEach(btn => btn.classList.remove("active"));
+            document.querySelector(`.btn-group .btn[onclick="mostrarVentas('${periodo}')"]`).classList.add("active");
+        }
+    </script>
+}
