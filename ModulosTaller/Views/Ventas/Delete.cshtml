@@ -1,0 +1,120 @@
+﻿@model ModulosTaller.Models.Venta
+@{
+    ViewData["Title"] = "Editar Venta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-edit mr-2"></i>Editar Venta #@Model.IdVenta
+        </h1>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left mr-1"></i> Volver al Listado
+        </a>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-receipt mr-2"></i>Editar Información de la Venta
+            </h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit">
+                <input type="hidden" asp-for="IdVenta" />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="IdCliente" class="control-label font-weight-bold">Cliente</label>
+                            <select asp-for="IdCliente" class="form-control" asp-items="ViewBag.IdCliente"></select>
+                            <span asp-validation-for="IdCliente" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="FechaVenta" class="control-label font-weight-bold">Fecha Venta</label>
+                            <input asp-for="FechaVenta" class="form-control" />
+                            <span asp-validation-for="FechaVenta" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Observaciones" class="control-label font-weight-bold">Observaciones</label>
+                    <textarea asp-for="Observaciones" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Observaciones" class="text-danger"></span>
+                </div>
+
+                <!-- Mostrar detalles existentes -->
+                @if (Model.VentaDetalles != null && Model.VentaDetalles.Any())
+                {
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h5 class="font-weight-bold text-primary">Productos de la Venta</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio Unitario</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var detalle in Model.VentaDetalles)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @if (detalle.IdProductoNavigation != null)
+                                                    {
+                                                        @detalle.IdProductoNavigation.NombreProducto
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-muted">Producto no disponible</span>
+                                                    }
+                                                </td>
+                                                <td>@detalle.Cantidad</td>
+                                                <td>@detalle.PrecioUnitario.ToString("C")</td>
+                                                <td>@((detalle.Cantidad * detalle.PrecioUnitario).ToString("C"))</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="font-weight-bold">
+                                            <td colspan="3" class="text-right">TOTAL:</td>
+                                            <td class="text-success">
+                                                @{
+                                                    var totalEdit = Model.VentaDetalles.Sum(vd => vd.Cantidad * vd.PrecioUnitario);
+                                                }
+                                                @totalEdit.ToString("C")
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="form-group mt-4 text-right">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save mr-1"></i> Guardar Cambios
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
