@@ -35,15 +35,15 @@
             <input asp-for="FechaNacimiento" type="date" class="form-control" required />
         </div>
         <div class="col-md-6 mb-3">
-            <label class="form-label">Dirección</label>
-            <input name="Direccion" class="form-control" required />
+            <label asp-for="Barrio" class="form-label">Dirección</label>
+            <input asp-for="Barrio" class="form-control" required />
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-6 mb-3">
-            <label class="form-label">Teléfono</label>
-            <input name="Telefono" class="form-control" required />
+            <label asp-for="Telefono" class="form-label">Teléfono</label>
+            <input asp-for="Telefono" class="form-control" required />
         </div>
         <div class="col-md-6 mb-3">
             <label asp-for="Correo" class="form-label">Correo electrónico</label>
@@ -73,7 +73,7 @@
 
     <div class="mb-3">
         <label asp-for="IdRol" class="form-label">Tipo de Usuario</label>
-        <select asp-for="IdRol" class="form-select" asp-items="new SelectList(ViewBag.Roles)" IdRol", "NombreRol" )" required>
+        <select asp-for="IdRol" class="form-select" asp-items="ViewBag.Roles" required>
             <option value="">Seleccione un rol...</option>
         </select>
     </div>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ModulosTaller.Models;
 
@@ -15,22 +16,25 @@ namespace ModulosTaller.Controllers
 
         public IActionResult Index()
         {
-            var usuarios = _context.Usuarios.Include(u => u.IdRolNavigation).ToList();
-            ViewBag.Roles = _context.Roles.ToList(); // Para el modal de creación
+            var usuarios = _context.Usuarios
+                .Include(u => u.IdRolNavigation)
+                .ToList();
+
+            ViewBag.Roles = new SelectList(_context.Roles, "IdRol", "NombreRol");
             return View(usuarios);
         }
 
-        // ✅ Modal: Crear Usuario
+        // Modal: Crear Usuario
         public IActionResult Create()
         {
-            ViewBag.Roles = _context.Roles.ToList();
+            ViewBag.Roles = new SelectList(_context.Roles, "IdRol", "NombreRol");
             return PartialView("_Create", new Usuario());
         }
 
         [HttpPost]
         public IActionResult Create(Usuario usuario)
         {
-            ViewBag.Roles = _context.Roles.ToList();
+            ViewBag.Roles = new SelectList(_context.Roles, "IdRol", "NombreRol");
 
             if (_context.Usuarios.Any(u => u.Correo == usuario.Correo))
             {
@@ -49,20 +53,20 @@ namespace ModulosTaller.Controllers
             return PartialView("_Create", usuario);
         }
 
-        // ✅ Modal: Editar Usuario
+        // Modal: Editar Usuario
         public IActionResult Edit(int id)
         {
             var usuario = _context.Usuarios.Find(id);
             if (usuario == null) return NotFound();
 
-            ViewBag.Roles = _context.Roles.ToList();
+            ViewBag.Roles = new SelectList(_context.Roles, "IdRol", "NombreRol", usuario.IdRol);
             return PartialView("_Edit", usuario);
         }
 
         [HttpPost]
         public IActionResult Edit(Usuario usuario)
         {
-            ViewBag.Roles = _context.Roles.ToList();
+            ViewBag.Roles = new SelectList(_context.Roles, "IdRol", "NombreRol", usuario.IdRol);
 
             if (ModelState.IsValid)
             {
@@ -75,7 +79,7 @@ namespace ModulosTaller.Controllers
             return PartialView("_Edit", usuario);
         }
 
-        // ✅ Modal: Eliminar Usuario
+        // Modal: Eliminar Usuario
         public IActionResult Delete(int id)
         {
             var usuario = _context.Usuarios.Find(id);
@@ -96,14 +100,17 @@ namespace ModulosTaller.Controllers
             return RedirectToAction("Index");
         }
 
-        // ✅ Modal: Detalles del Usuario
+        // Modal: Detalles del Usuario
         public IActionResult Details(int id)
         {
-            var usuario = _context.Usuarios.Include(u => u.IdRolNavigation).FirstOrDefault(u => u.IdUsuario == id);
+            var usuario = _context.Usuarios
+                .Include(u => u.IdRolNavigation)
+                .FirstOrDefault(u => u.IdUsuario == id);
+
             return usuario == null ? NotFound() : PartialView("_ModalDetalles", usuario);
         }
 
-        // ✅ Botón de estado dinámico
+        // Botón de estado dinámico
         [HttpPost]
         public IActionResult CambiarEstado(int id, bool activo)
         {
