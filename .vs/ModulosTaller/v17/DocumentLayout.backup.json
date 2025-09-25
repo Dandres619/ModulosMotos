@@ -3,6 +3,26 @@
   "WorkspaceRootPath": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\eduar vh\\source\\repos\\modulosmoto\\modulostaller\\views\\usuarios\\_create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\views\\usuarios\\_create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\eduar vh\\source\\repos\\modulosmoto\\modulostaller\\models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\eduar vh\\source\\repos\\modulosmoto\\modulostaller\\controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\eduar vh\\source\\repos\\modulosmoto\\modulostaller\\models\\rolpermiso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\models\\rolpermiso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\eduar vh\\source\\repos\\modulosmoto\\modulostaller\\models\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\models\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\eduar vh\\source\\repos\\modulosmoto\\modulostaller\\views\\usuarios\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\views\\usuarios\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -35,16 +55,8 @@
       "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\eduar vh\\source\\repos\\modulosmoto\\modulostaller\\models\\rolpermiso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\models\\rolpermiso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\eduar vh\\source\\repos\\modulosmoto\\modulostaller\\models\\permiso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\models\\permiso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\eduar vh\\source\\repos\\modulosmoto\\modulostaller\\models\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|solutionrelative:modulostaller\\models\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B8322A3E-0ED6-4CC5-95F2-9BF65A83F66F}|ModulosTaller\\ModulosTaller.csproj|c:\\users\\eduar vh\\source\\repos\\modulosmoto\\modulostaller\\migrations\\20250924205222_rolpermisorelacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -58,11 +70,50 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Usuario.cs",
+              "DocumentMoniker": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Models\\Usuario.cs",
+              "RelativeDocumentMoniker": "ModulosTaller\\Models\\Usuario.cs",
+              "ToolTip": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Models\\Usuario.cs",
+              "RelativeToolTip": "ModulosTaller\\Models\\Usuario.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAcwBoAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-25T18:20:30.027Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "_Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Views\\Usuarios\\_Create.cshtml",
+              "RelativeDocumentMoniker": "ModulosTaller\\Views\\Usuarios\\_Create.cshtml",
+              "ToolTip": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Views\\Usuarios\\_Create.cshtml",
+              "RelativeToolTip": "ModulosTaller\\Views\\Usuarios\\_Create.cshtml",
+              "ViewState": "AgIAABkAAAAAAAAAAAAkwCkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-25T18:17:17.728Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UsuariosController.cs",
+              "DocumentMoniker": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Controllers\\UsuariosController.cs",
+              "RelativeDocumentMoniker": "ModulosTaller\\Controllers\\UsuariosController.cs",
+              "ToolTip": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Controllers\\UsuariosController.cs",
+              "RelativeToolTip": "ModulosTaller\\Controllers\\UsuariosController.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAQwG8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-25T18:16:52.173Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Views\\Usuarios\\Index.cshtml",
               "RelativeDocumentMoniker": "ModulosTaller\\Views\\Usuarios\\Index.cshtml",
@@ -70,12 +121,11 @@
               "RelativeToolTip": "ModulosTaller\\Views\\Usuarios\\Index.cshtml",
               "ViewState": "AgIAAGoAAAAAAAAAAAAiwKQAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-24T21:26:03.344Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-24T21:26:03.344Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 6,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Views\\Dashboard\\Index.cshtml",
               "RelativeDocumentMoniker": "ModulosTaller\\Views\\Dashboard\\Index.cshtml",
@@ -87,7 +137,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "_CreatePermiso.cshtml",
               "DocumentMoniker": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Views\\Roles\\_CreatePermiso.cshtml",
               "RelativeDocumentMoniker": "ModulosTaller\\Views\\Roles\\_CreatePermiso.cshtml",
@@ -99,7 +149,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 9,
               "Title": "RolesController.cs",
               "DocumentMoniker": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Controllers\\RolesController.cs",
               "RelativeDocumentMoniker": "ModulosTaller\\Controllers\\RolesController.cs",
@@ -111,7 +161,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 7,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Views\\Roles\\Index.cshtml",
               "RelativeDocumentMoniker": "ModulosTaller\\Views\\Roles\\Index.cshtml",
@@ -123,7 +173,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 14,
               "Title": "20250924205222_RolPermisoRelacion.cs",
               "DocumentMoniker": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Migrations\\20250924205222_RolPermisoRelacion.cs",
               "RelativeDocumentMoniker": "ModulosTaller\\Migrations\\20250924205222_RolPermisoRelacion.cs",
@@ -135,7 +185,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 11,
               "Title": "Agendamiento.cs",
               "DocumentMoniker": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Models\\Agendamiento.cs",
               "RelativeDocumentMoniker": "ModulosTaller\\Models\\Agendamiento.cs",
@@ -147,7 +197,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 12,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\appsettings.json",
               "RelativeDocumentMoniker": "ModulosTaller\\appsettings.json",
@@ -159,7 +209,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 13,
               "Title": "Permiso.cs",
               "DocumentMoniker": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Models\\Permiso.cs",
               "RelativeDocumentMoniker": "ModulosTaller\\Models\\Permiso.cs",
@@ -171,7 +221,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 3,
               "Title": "RolPermiso.cs",
               "DocumentMoniker": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Models\\RolPermiso.cs",
               "RelativeDocumentMoniker": "ModulosTaller\\Models\\RolPermiso.cs",
@@ -179,11 +229,12 @@
               "RelativeToolTip": "ModulosTaller\\Models\\RolPermiso.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-24T20:43:42.056Z"
+              "WhenOpened": "2025-09-24T20:43:42.056Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 4,
               "Title": "Role.cs",
               "DocumentMoniker": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Models\\Role.cs",
               "RelativeDocumentMoniker": "ModulosTaller\\Models\\Role.cs",
@@ -195,7 +246,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 10,
               "Title": "TallerMotosDbContext.cs",
               "DocumentMoniker": "C:\\Users\\Eduar Vh\\source\\repos\\ModulosMoto\\ModulosTaller\\Models\\TallerMotosDbContext.cs",
               "RelativeDocumentMoniker": "ModulosTaller\\Models\\TallerMotosDbContext.cs",
