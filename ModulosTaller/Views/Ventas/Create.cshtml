@@ -1,5 +1,4 @@
 ﻿@model ModulosTaller.Models.Venta
-
 @{
     ViewData["Title"] = "Nueva Venta";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,101 +6,115 @@
 
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Nueva Venta</h1>
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-plus-circle mr-2"></i>Nueva Venta
+        </h1>
         <a asp-action="Index" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Volver a la lista
+            <i class="fas fa-arrow-left mr-1"></i> Volver al Listado
         </a>
     </div>
 
-    <!-- Mostrar mensajes de éxito o error -->
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["SuccessMessage"]
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    }
-
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Información de la Venta</h6>
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-receipt mr-2"></i>Información de la Venta
+            </h6>
         </div>
         <div class="card-body">
             <form asp-action="Create" id="ventaForm">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <div class="row">
+                <!-- Información del Cliente -->
+                <div class="row mb-4">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="IdCliente" class="control-label">Cliente *</label>
-                            <select asp-for="IdCliente" class="form-control" asp-items="ViewBag.ClientesList" required>
-                                <option value="">-- Seleccionar Cliente --</option>
+                            <label asp-for="IdCliente" class="control-label font-weight-bold">
+                                <i class="fas fa-user mr-1"></i>Cliente *
+                            </label>
+                            <select asp-for="IdCliente" class="form-control" id="clienteSelect" required>
+                                <option value="">Seleccionar cliente...</option>
+                                @foreach (var cliente in ViewBag.Clientes as List<Cliente>)
+                                {
+                                    <option value="@cliente.IdCliente">
+                                        @cliente.PrimerNombre @cliente.PrimerApellido - @cliente.TipoDocumento: @cliente.Documento
+                                    </option>
+                                }
                             </select>
                             <span asp-validation-for="IdCliente" class="text-danger"></span>
-                            @if (ViewBag.ClientesList == null || ((SelectList)ViewBag.ClientesList).Count() == 1)
-                            {
-                                <small class="text-warning">No hay clientes registrados. <a asp-controller="Clientes" asp-action="Create">Crear cliente</a></small>
-                            }
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label asp-for="FechaVenta" class="control-label">Fecha de Venta</label>
-                            <input asp-for="FechaVenta" class="form-control" type="datetime-local"
-                                   value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                            <label asp-for="FechaVenta" class="control-label font-weight-bold">
+                                <i class="fas fa-calendar mr-1"></i>Fecha de Venta
+                            </label>
+                            <input asp-for="FechaVenta" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
                             <span asp-validation-for="FechaVenta" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
 
-                <div class="row mt-4">
+                <!-- Detalles de la Venta -->
+                <div class="row mb-4">
                     <div class="col-12">
-                        <h5>Productos de la Venta</h5>
-                        <div id="productos-container">
-                            <div class="producto-row row mb-2 border-bottom pb-2">
-                                <div class="col-md-5">
-                                    <select name="productos" class="form-control producto-select" required>
-                                        <option value="">-- Seleccionar Producto --</option>
-                                        @if (ViewBag.ProductosList != null)
-                                        {
-                                            foreach (var item in ViewBag.ProductosList as SelectList)
-                                            {
-                                                <option value="@item.Value" data-precio="@item.Text.Split('|').LastOrDefault()?.Trim()">
-                                                    @item.Text
-                                                </option>
-                                            }
-                                        }
-                                    </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="number" name="cantidades" class="form-control cantidad" min="1" value="1" required />
-                                </div>
-                                <div class="col-md-3">
-                                    <input type="number" name="precios" class="form-control precio" step="0.01" min="0" readonly />
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-danger btn-remove-producto" disabled>
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
+                        <h5 class="font-weight-bold text-primary mb-3">
+                            <i class="fas fa-cubes mr-2"></i>Productos de la Venta
+                        </h5>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="productosTable">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th width="120">Cantidad</th>
+                                        <th width="150">Precio Unitario</th>
+                                        <th width="150">Subtotal</th>
+                                        <th width="80">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="detallesBody">
+                                    <!-- Los detalles se agregarán dinámicamente -->
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="3" class="text-right font-weight-bold">TOTAL:</td>
+                                        <td class="font-weight-bold text-success" id="totalVenta">$0.00</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </div>
-                        <button type="button" id="btn-add-producto" class="btn btn-success mt-2">
-                            <i class="fas fa-plus"></i> Agregar Producto
+
+                        <!-- Botón para agregar producto -->
+                        <button type="button" class="btn btn-success btn-sm" id="agregarProducto">
+                            <i class="fas fa-plus mr-1"></i> Agregar Producto
                         </button>
                     </div>
                 </div>
 
-                <div class="row mt-4">
+                <!-- Observaciones -->
+                <div class="row mb-4">
                     <div class="col-12">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Guardar Venta
-                            </button>
-                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                            <label asp-for="Observaciones" class="control-label font-weight-bold">
+                                <i class="fas fa-sticky-note mr-1"></i>Observaciones
+                            </label>
+                            <textarea asp-for="Observaciones" class="form-control" rows="3"
+                                      placeholder="Observaciones adicionales sobre la venta..."></textarea>
+                            <span asp-validation-for="Observaciones" class="text-danger"></span>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save mr-1"></i> Guardar Venta
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times mr-1"></i> Cancelar
+                        </a>
                     </div>
                 </div>
             </form>
@@ -109,48 +122,178 @@
     </div>
 </div>
 
+<!-- Modal para seleccionar producto -->
+<div class="modal fade" id="productoModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Seleccionar Producto</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Producto *</label>
+                    <select class="form-control" id="productoSelect">
+                        <option value="">Seleccionar producto...</option>
+                        @foreach (var producto in ViewBag.Productos as List<Producto>)
+                        {
+                            <option value="@producto.IdProducto" data-precio="@producto.Precio">
+                                @producto.NombreProducto - Stock: @producto.Stock - $@producto.Precio
+                            </option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Cantidad *</label>
+                    <input type="number" class="form-control" id="cantidadProducto" min="1" value="1">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirmarProducto">
+                    <i class="fas fa-check mr-1"></i> Agregar
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
+        let detalles = [];
+        let contadorDetalle = 0;
+
         $(document).ready(function() {
-            // Función para obtener el precio del producto
-            function obtenerPrecioProducto(productoId) {
-                // Esta función podría hacer una llamada AJAX para obtener el precio actual
-                // Por ahora, usaremos el precio del data attribute
-                return parseFloat($('.producto-select option[value="' + productoId + '"]').data('precio')) || 0;
-            }
+            // Abrir modal para agregar producto
+            $('#agregarProducto').on('click', function() {
+                $('#productoModal').modal('show');
+            });
 
-            // Actualizar precio cuando se selecciona producto
-            $(document).on('change', '.producto-select', function() {
-                var productoId = $(this).val();
-                if (productoId) {
-                    var precio = obtenerPrecioProducto(productoId);
-                    $(this).closest('.producto-row').find('.precio').val(precio.toFixed(2));
-                } else {
-                    $(this).closest('.producto-row').find('.precio').val('');
+            // Confirmar agregar producto
+            $('#confirmarProducto').on('click', function() {
+                const productoSelect = $('#productoSelect');
+                const productoId = productoSelect.val();
+                const productoText = productoSelect.find('option:selected').text();
+                const precio = parseFloat(productoSelect.find('option:selected').data('precio'));
+                const cantidad = parseInt($('#cantidadProducto').val());
+
+                if (!productoId || cantidad < 1) {
+                    alert('Por favor complete todos los campos obligatorios');
+                    return;
+                }
+
+                // Verificar si el producto ya está agregado
+                if (detalles.some(d => d.productoId == productoId)) {
+                    alert('Este producto ya está en la lista');
+                    return;
+                }
+
+                // Agregar a la lista
+                const detalle = {
+                    id: contadorDetalle++,
+                    productoId: productoId,
+                    productoNombre: productoText.split(' - ')[0],
+                    cantidad: cantidad,
+                    precioUnitario: precio,
+                    subtotal: cantidad * precio
+                };
+
+                detalles.push(detalle);
+                actualizarTabla();
+                calcularTotal();
+                $('#productoModal').modal('hide');
+                limpiarModal();
+            });
+
+            // Eliminar producto de la lista
+            $(document).on('click', '.btn-eliminar', function() {
+                const id = $(this).data('id');
+                detalles = detalles.filter(d => d.id != id);
+                actualizarTabla();
+                calcularTotal();
+            });
+
+            // Actualizar cantidad
+            $(document).on('change', '.cantidad-input', function() {
+                const id = $(this).data('id');
+                const cantidad = parseInt($(this).val());
+                const detalle = detalles.find(d => d.id == id);
+
+                if (detalle && cantidad > 0) {
+                    detalle.cantidad = cantidad;
+                    detalle.subtotal = cantidad * detalle.precioUnitario;
+                    actualizarTabla();
+                    calcularTotal();
                 }
             });
 
-            // Agregar nuevo producto
-            $('#btn-add-producto').click(function() {
-                var newRow = $('.producto-row:first').clone();
-                newRow.find('select').val('');
-                newRow.find('input').val('');
-                newRow.find('.cantidad').val(1);
-                newRow.find('.precio').val('');
-                newRow.find('.btn-remove-producto').prop('disabled', false);
-                $('#productos-container').append(newRow);
-            });
-
-            // Eliminar producto
-            $(document).on('click', '.btn-remove-producto', function() {
-                if ($('.producto-row').length > 1) {
-                    $(this).closest('.producto-row').remove();
+            // Enviar formulario
+            $('#ventaForm').on('submit', function(e) {
+                if (detalles.length === 0) {
+                    e.preventDefault();
+                    alert('Debe agregar al menos un producto a la venta');
+                    return;
                 }
+
+                // Agregar los detalles al formulario
+                detalles.forEach((detalle, index) => {
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: `VentaDetalles[${index}].IdProducto`,
+                        value: detalle.productoId
+                    }).appendTo('#ventaForm');
+
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: `VentaDetalles[${index}].Cantidad`,
+                        value: detalle.cantidad
+                    }).appendTo('#ventaForm');
+
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: `VentaDetalles[${index}].PrecioUnitario`,
+                        value: detalle.precioUnitario
+                    }).appendTo('#ventaForm');
+                });
             });
         });
-    </script>
 
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+        function actualizarTabla() {
+            const tbody = $('#detallesBody');
+            tbody.empty();
+
+            detalles.forEach(detalle => {
+                const row = `
+                    <tr>
+                        <td>${detalle.productoNombre}</td>
+                        <td>
+                            <input type="number" class="form-control cantidad-input"
+                                   data-id="${detalle.id}" value="${detalle.cantidad}" min="1">
+                        </td>
+                        <td>$${detalle.precioUnitario.toFixed(2)}</td>
+                        <td>$${detalle.subtotal.toFixed(2)}</td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm btn-eliminar"
+                                    data-id="${detalle.id}" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+        }
+
+        function calcularTotal() {
+            const total = detalles.reduce((sum, detalle) => sum + detalle.subtotal, 0);
+            $('#totalVenta').text('$' + total.toFixed(2));
+        }
+
+        function limpiarModal() {
+            $('#productoSelect').val('');
+            $('#cantidadProducto').val(1);
+        }
+    </script>
 }

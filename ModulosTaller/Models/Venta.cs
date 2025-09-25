@@ -13,6 +13,8 @@ public partial class Venta
 
     public int? IdCompra { get; set; }
 
+    public string? Observaciones { get; set; } 
+
     public virtual Cliente? IdClienteNavigation { get; set; }
 
     public virtual Compra? IdCompraNavigation { get; set; }

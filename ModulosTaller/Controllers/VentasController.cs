@@ -56,54 +56,84 @@ namespace ModulosTaller.Controllers
         // GET: Ventas/Create
         public async Task<IActionResult> Create()
         {
-            // Cargar clientes activos y productos
-            var clientes = await _context.Clientes.Where(c => c.Estado).ToListAsync();
-            var productos = await _context.Productos.ToListAsync();
+            try
+            {
+                // Cargar clientes activos y productos con stock
+                var clientes = await _context.Clientes.Where(c => c.Estado).ToListAsync();
+                var productos = await _context.Productos.Where(p => p.Stock > 0).ToListAsync();
 
-            ViewBag.ClientesList = new SelectList(clientes, "IdCliente", "NombreCompleto");
-            ViewBag.ProductosList = new SelectList(productos, "IdProducto", "NombreProducto");
+                // Pasar las listas como ViewBag (no como SelectList) para que funcione con tu vista
+                ViewBag.Clientes = clientes;
+                ViewBag.Productos = productos;
 
-            // Establecer fecha actual por defecto
-            ViewBag.FechaActual = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                // Establecer fecha actual por defecto
+                ViewBag.FechaActual = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
 
-            return View();
+                return View();
+            }
+            catch (Exception ex)
+            {
+                // En caso de error, pasar listas vacías
+                ViewBag.Clientes = new List<Cliente>();
+                ViewBag.Productos = new List<Producto>();
+                ViewBag.Error = "Error al cargar los datos: " + ex.Message;
+                return View();
+            }
         }
 
         // POST: Ventas/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Venta venta, int[] productos, int[] cantidades, decimal[] precios)
+        public async Task<IActionResult> Create([Bind("IdVenta,IdCliente,FechaVenta,Observaciones")] Venta venta, List<VentaDetalle> VentaDetalles)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // Crear la venta
-                    _context.Ventas.Add(venta);
-                    await _context.SaveChangesAsync();
-
-                    // Agregar detalles de venta si existen productos
-                    if (productos != null && productos.Length > 0)
+                    // Validar que haya detalles de venta
+                    if (VentaDetalles == null || !VentaDetalles.Any())
                     {
-                        for (int i = 0; i < productos.Length; i++)
+                        ModelState.AddModelError("", "Debe agregar al menos un producto a la venta");
+                    }
+                    else
+                    {
+                        // Crear la venta
+                        venta.FechaVenta = DateTime.Now; // Asegurar la fecha actual
+                        _context.Ventas.Add(venta);
+                        await _context.SaveChangesAsync();
+
+                        // Agregar detalles de venta
+                        foreach (var detalle in VentaDetalles)
                         {
-                            if (productos[i] > 0 && cantidades[i] > 0)
+                            if (detalle.IdProducto > 0 && detalle.Cantidad > 0)
                             {
-                                var detalle = new VentaDetalle
-                                {
-                                    IdVenta = venta.IdVenta,
-                                    IdProducto = productos[i],
-                                    Cantidad = cantidades[i],
-                                    PrecioUnitario = precios[i]
-                                };
+                                detalle.IdVenta = venta.IdVenta;
                                 _context.VentaDetalles.Add(detalle);
+
+                                // Actualizar stock del producto
+                                var producto = await _context.Productos.FindAsync(detalle.IdProducto);
+                                if (producto != null)
+                                {
+                                    if (producto.Stock >= detalle.Cantidad)
+                                    {
+                                        producto.Stock -= detalle.Cantidad;
+                                        _context.Productos.Update(producto);
+                                    }
+                                    else
+                                    {
+                                        ModelState.AddModelError("", $"Stock insuficiente para el producto: {producto.NombreProducto}");
+                                        // Recargar datos y retornar la vista
+                                        await RecargarDatosViewBag();
+                                        return View(venta);
+                                    }
+                                }
                             }
                         }
-                        await _context.SaveChangesAsync();
-                    }
 
-                    TempData["SuccessMessage"] = "Venta creada exitosamente";
-                    return RedirectToAction(nameof(Index));
+                        await _context.SaveChangesAsync();
+                        TempData["SuccessMessage"] = "Venta creada exitosamente";
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -112,12 +142,7 @@ namespace ModulosTaller.Controllers
             }
 
             // Recargar los datos si hay error
-            var clientes = await _context.Clientes.Where(c => c.Estado).ToListAsync();
-            var productosList = await _context.Productos.ToListAsync();
-
-            ViewBag.ClientesList = new SelectList(clientes, "IdCliente", "NombreCompleto", venta.IdCliente);
-            ViewBag.ProductosList = new SelectList(productosList, "IdProducto", "NombreProducto");
-
+            await RecargarDatosViewBag();
             return View(venta);
         }
 
@@ -150,7 +175,7 @@ namespace ModulosTaller.Controllers
         // POST: Ventas/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Venta venta, int[] productos, int[] cantidades, decimal[] precios)
+        public async Task<IActionResult> Edit(int id, [Bind("IdVenta,IdCliente,FechaVenta,Observaciones")] Venta venta, int[] productos, int[] cantidades, decimal[] precios)
         {
             if (id != venta.IdVenta)
             {
@@ -161,11 +186,33 @@ namespace ModulosTaller.Controllers
             {
                 try
                 {
-                    _context.Update(venta);
+                    // Obtener la venta existente
+                    var ventaExistente = await _context.Ventas
+                        .Include(v => v.VentaDetalles)
+                        .FirstOrDefaultAsync(v => v.IdVenta == id);
+
+                    if (ventaExistente == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Actualizar propiedades básicas
+                    ventaExistente.IdCliente = venta.IdCliente;
+                    ventaExistente.FechaVenta = venta.FechaVenta;
+                    ventaExistente.Observaciones = venta.Observaciones;
+
+                    // Restaurar stock de los detalles antiguos
+                    foreach (var detalle in ventaExistente.VentaDetalles)
+                    {
+                        var producto = await _context.Productos.FindAsync(detalle.IdProducto);
+                        if (producto != null)
+                        {
+                            producto.Stock += detalle.Cantidad;
+                        }
+                    }
 
                     // Eliminar detalles existentes
-                    var detallesExistentes = _context.VentaDetalles.Where(vd => vd.IdVenta == id);
-                    _context.VentaDetalles.RemoveRange(detallesExistentes);
+                    _context.VentaDetalles.RemoveRange(ventaExistente.VentaDetalles);
 
                     // Agregar nuevos detalles
                     if (productos != null && productos.Length > 0)
@@ -176,12 +223,28 @@ namespace ModulosTaller.Controllers
                             {
                                 var detalle = new VentaDetalle
                                 {
-                                    IdVenta = venta.IdVenta,
+                                    IdVenta = ventaExistente.IdVenta,
                                     IdProducto = productos[i],
                                     Cantidad = cantidades[i],
                                     PrecioUnitario = precios[i]
                                 };
                                 _context.VentaDetalles.Add(detalle);
+
+                                // Actualizar stock
+                                var producto = await _context.Productos.FindAsync(productos[i]);
+                                if (producto != null)
+                                {
+                                    if (producto.Stock >= cantidades[i])
+                                    {
+                                        producto.Stock -= cantidades[i];
+                                    }
+                                    else
+                                    {
+                                        ModelState.AddModelError("", $"Stock insuficiente para el producto: {producto.NombreProducto}");
+                                        await RecargarDatosViewBag();
+                                        return View(venta);
+                                    }
+                                }
                             }
                         }
                     }
@@ -203,12 +266,7 @@ namespace ModulosTaller.Controllers
                 }
             }
 
-            var clientes = await _context.Clientes.Where(c => c.Estado).ToListAsync();
-            var productosList = await _context.Productos.ToListAsync();
-
-            ViewBag.ClientesList = new SelectList(clientes, "IdCliente", "NombreCompleto", venta.IdCliente);
-            ViewBag.ProductosList = new SelectList(productosList, "IdProducto", "NombreProducto");
-
+            await RecargarDatosViewBag();
             return View(venta);
         }
 
@@ -222,6 +280,8 @@ namespace ModulosTaller.Controllers
 
             var venta = await _context.Ventas
                 .Include(v => v.IdClienteNavigation)
+                .Include(v => v.VentaDetalles)
+                    .ThenInclude(vd => vd.IdProductoNavigation)
                 .FirstOrDefaultAsync(m => m.IdVenta == id);
 
             if (venta == null)
@@ -237,24 +297,73 @@ namespace ModulosTaller.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var venta = await _context.Ventas.FindAsync(id);
-            if (venta != null)
+            try
             {
-                // Eliminar detalles primero
-                var detalles = _context.VentaDetalles.Where(vd => vd.IdVenta == id);
-                _context.VentaDetalles.RemoveRange(detalles);
+                var venta = await _context.Ventas
+                    .Include(v => v.VentaDetalles)
+                    .FirstOrDefaultAsync(v => v.IdVenta == id);
 
-                _context.Ventas.Remove(venta);
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Venta eliminada exitosamente";
+                if (venta != null)
+                {
+                    // Restaurar stock antes de eliminar
+                    foreach (var detalle in venta.VentaDetalles)
+                    {
+                        var producto = await _context.Productos.FindAsync(detalle.IdProducto);
+                        if (producto != null)
+                        {
+                            producto.Stock += detalle.Cantidad;
+                        }
+                    }
+
+                    // Eliminar detalles primero
+                    _context.VentaDetalles.RemoveRange(venta.VentaDetalles);
+                    _context.Ventas.Remove(venta);
+
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Venta eliminada exitosamente";
+                }
+
+                return RedirectToAction(nameof(Index));
             }
-
-            return RedirectToAction(nameof(Index));
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error al eliminar la venta: " + ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         private bool VentaExists(int id)
         {
             return _context.Ventas.Any(e => e.IdVenta == id);
+        }
+
+        // Método auxiliar para recargar los datos del ViewBag
+        private async Task RecargarDatosViewBag()
+        {
+            var clientes = await _context.Clientes.Where(c => c.Estado).ToListAsync();
+            var productos = await _context.Productos.Where(p => p.Stock > 0).ToListAsync();
+
+            ViewBag.Clientes = clientes;
+            ViewBag.Productos = productos;
+        }
+
+        // Método para obtener información de producto (útil para AJAX)
+        [HttpGet]
+        public async Task<JsonResult> GetProductoInfo(int id)
+        {
+            var producto = await _context.Productos.FindAsync(id);
+            if (producto == null)
+            {
+                return Json(new { success = false });
+            }
+
+            return Json(new
+            {
+                success = true,
+                nombre = producto.NombreProducto,
+                precio = producto.Precio,
+                stock = producto.Stock
+            });
         }
     }
 }

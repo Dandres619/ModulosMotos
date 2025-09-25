@@ -12,7 +12,7 @@
         <h1 class="h3 mb-0 text-gray-800">
             <i class="fas fa-users mr-2"></i>Clientes
         </h1>
-        <a asp-action="Create" class="btn btn-primary btn-sm">
+        <a asp-action="Create" class="btn btn-primary">
             <i class="fas fa-plus-circle mr-1"></i> Nuevo Cliente
         </a>
     </div>
@@ -20,7 +20,13 @@
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show auto-dismiss" role="alert" data-dismiss-time="5000">
-            <i class="fas fa-check-circle mr-2"></i>@TempData["SuccessMessage"]
+            <div class="d-flex align-items-center">
+                <i class="fas fa-check-circle fa-lg mr-3"></i>
+                <div>
+                    <h5 class="alert-heading mb-1">¡Éxito!</h5>
+                    <p class="mb-0">@TempData["SuccessMessage"]</p>
+                </div>
+            </div>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -30,7 +36,45 @@
     @if (TempData["ErrorMessage"] != null)
     {
         <div class="alert alert-danger alert-dismissible fade show auto-dismiss" role="alert" data-dismiss-time="5000">
-            <i class="fas fa-exclamation-circle mr-2"></i>@TempData["ErrorMessage"]
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-triangle fa-lg mr-3"></i>
+                <div>
+                    <h5 class="alert-heading mb-1">¡Error!</h5>
+                    <p class="mb-0">@TempData["ErrorMessage"]</p>
+                </div>
+            </div>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    @if (TempData["WarningMessage"] != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show auto-dismiss" role="alert" data-dismiss-time="5000">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-circle fa-lg mr-3"></i>
+                <div>
+                    <h5 class="alert-heading mb-1">Advertencia</h5>
+                    <p class="mb-0">@TempData["WarningMessage"]</p>
+                </div>
+            </div>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    @if (TempData["InfoMessage"] != null)
+    {
+        <div class="alert alert-info alert-dismissible fade show auto-dismiss" role="alert" data-dismiss-time="5000">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-info-circle fa-lg mr-3"></i>
+                <div>
+                    <h5 class="alert-heading mb-1">Información</h5>
+                    <p class="mb-0">@TempData["InfoMessage"]</p>
+                </div>
+            </div>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -161,15 +205,8 @@
                                     }
                                 </td>
                                 <td>
-                                    <div class="btn-group btn-group-sm" role="group">
-                                        <!-- Botones comunes para todos los estados -->
-                                        <a asp-action="Edit" asp-route-id="@item.IdCliente"
-                                           class="btn btn-warning btn-action"
-                                           title="Editar cliente"
-                                           data-toggle="tooltip">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-
+                                    <div class="btn-group-vertical btn-group-sm" role="group">
+                                        <!-- Botón Ver Detalles (Eye) -->
                                         <a asp-action="Details" asp-route-id="@item.IdCliente"
                                            class="btn btn-info btn-action"
                                            title="Ver detalles completos"
@@ -177,10 +214,18 @@
                                             <i class="fas fa-eye"></i>
                                         </a>
 
+                                        <!-- Botón Editar (Edit) -->
+                                        <a asp-action="Edit" asp-route-id="@item.IdCliente"
+                                           class="btn btn-warning btn-action"
+                                           title="Editar cliente"
+                                           data-toggle="tooltip">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+
                                         <!-- Botones condicionales según estado -->
                                         @if (item.Estado)
                                         {
-                                            <!-- Botón para inactivar cliente activo -->
+                                            <!-- Botón para Inactivar (Ban) -->
                                             <form asp-action="Inactivar" method="post" class="d-inline">
                                                 <input type="hidden" name="id" value="@item.IdCliente" />
                                                 <button type="submit"
@@ -194,7 +239,7 @@
                                         }
                                         else
                                         {
-                                            <!-- Botón para activar cliente inactivo -->
+                                            <!-- Botón para Activar (Check) -->
                                             <form asp-action="Activar" method="post" class="d-inline">
                                                 <input type="hidden" name="id" value="@item.IdCliente" />
                                                 <button type="submit"
@@ -206,7 +251,7 @@
                                                 </button>
                                             </form>
 
-                                            <!-- Botón para eliminar permanentemente cliente inactivo -->
+                                            <!-- Botón para Eliminar (Trash) -->
                                             <a asp-action="Delete" asp-route-id="@item.IdCliente"
                                                class="btn btn-danger btn-action"
                                                title="Eliminar permanentemente"
@@ -411,6 +456,52 @@
     </script>
 
     <style>
+        /* Estilos mejorados para las alertas */
+        .alert {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-left: 5px solid;
+        }
+
+        .alert-success {
+            border-left-color: #28a745;
+            background: linear-gradient(135deg, #f8fff9 0%, #e8f5e9 100%);
+        }
+
+        .alert-danger {
+            border-left-color: #dc3545;
+            background: linear-gradient(135deg, #fff8f8 0%, #ffebee 100%);
+        }
+
+        .alert-warning {
+            border-left-color: #ffc107;
+            background: linear-gradient(135deg, #fffbf0 0%, #fff3cd 100%);
+        }
+
+        .alert-info {
+            border-left-color: #17a2b8;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e3f2fd 100%);
+        }
+
+        .alert .fa-lg {
+            font-size: 1.5rem;
+        }
+
+        .alert-heading {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .alert .close {
+            opacity: 0.8;
+            font-size: 1.2rem;
+        }
+
+            .alert .close:hover {
+                opacity: 1;
+            }
+
         .client-row:hover {
             background-color: #f8f9fa;
             transition: background-color 0.3s ease;
@@ -432,75 +523,88 @@
             padding: 0.5em 0.8em;
         }
 
-        /* Botones de acción pequeños */
+        /* Botones de acción pequeños - Estilo Figma */
         .btn-action {
             border: none;
-            margin: 0 2px;
-            padding: 0.35rem 0.5rem;
+            margin: 2px 0;
+            padding: 0.5rem;
             min-width: 35px;
+            height: 35px;
             color: white !important;
             font-weight: 600;
             font-size: 0.875rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .btn-warning {
-            background-color: #f6c23e !important;
-            border-color: #f6c23e !important;
-        }
-
-            .btn-warning:hover {
-                background-color: #f8b400 !important;
-                border-color: #f8b400 !important;
-                transform: scale(1.1);
-            }
-
+        /* Colores según Figma */
         .btn-info {
-            background-color: #36b9cc !important;
-            border-color: #36b9cc !important;
+            background-color: #3b82f6 !important;
+            border-color: #3b82f6 !important;
         }
 
             .btn-info:hover {
-                background-color: #2c9faf !important;
-                border-color: #2c9faf !important;
-                transform: scale(1.1);
+                background-color: #2563eb !important;
+                border-color: #2563eb !important;
+                transform: scale(1.05);
+            }
+
+        .btn-warning {
+            background-color: #f59e0b !important;
+            border-color: #f59e0b !important;
+        }
+
+            .btn-warning:hover {
+                background-color: #d97706 !important;
+                border-color: #d97706 !important;
+                transform: scale(1.05);
             }
 
         .btn-danger {
-            background-color: #e74a3b !important;
-            border-color: #e74a3b !important;
+            background-color: #ef4444 !important;
+            border-color: #ef4444 !important;
         }
 
             .btn-danger:hover {
-                background-color: #d52a1a !important;
-                border-color: #d52a1a !important;
-                transform: scale(1.1);
+                background-color: #dc2626 !important;
+                border-color: #dc2626 !important;
+                transform: scale(1.05);
             }
 
         .btn-success {
-            background-color: #1cc88a !important;
-            border-color: #1cc88a !important;
+            background-color: #10b981 !important;
+            border-color: #10b981 !important;
         }
 
             .btn-success:hover {
-                background-color: #17a673 !important;
-                border-color: #17a673 !important;
-                transform: scale(1.1);
+                background-color: #059669 !important;
+                border-color: #059669 !important;
+                transform: scale(1.05);
             }
 
-        /* Iconos dentro de botones */
+        /* Iconos dentro de botones - Tamaño Figma */
         .btn-action i {
-            font-size: 0.9em;
+            font-size: 1em;
             color: white;
         }
 
-        /* Mejor contraste para texto */
-        .table td, .table th {
-            vertical-align: middle;
+        /* Grupo de botones vertical */
+        .btn-group-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
-        /* Efecto hover en botones */
+            .btn-group-vertical > .btn,
+            .btn-group-vertical > form {
+                margin: 1px 0;
+            }
+
+        /* Efecto hover en botones - Estilo Figma */
         .btn-action:hover {
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             color: white !important;
         }
 
@@ -511,7 +615,8 @@
 
         /* Espaciado en celdas de acciones */
         td:last-child {
-            min-width: 160px;
+            min-width: 60px;
+            text-align: center;
         }
 
         /* Botones del header */
@@ -519,48 +624,79 @@
             margin-right: 0.3rem;
         }
 
-        /* Badges de estado */
+        /* Badges de estado - Colores Figma */
         .badge-success {
-            background-color: #1cc88a;
+            background-color: #10b981;
             border: none;
+            color: white;
         }
 
         .badge-danger {
-            background-color: #e74a3b;
+            background-color: #ef4444;
             border: none;
+            color: white;
         }
 
         .badge-secondary {
-            background-color: #858796;
+            background-color: #6b7280;
             border: none;
+            color: white;
         }
 
         /* Estilos para formularios inline */
         form.d-inline {
-            display: inline-block;
-            margin: 0;
-        }
-
-        /* Ajustar espaciado entre botones */
-        .btn-group-sm > .btn,
-        .btn-group-sm > form {
-            margin: 0 1px;
+            display: block;
+            margin: 2px 0;
         }
 
         /* Responsive para móviles */
         @@media (max-width: 768px) {
             .btn-action {
-                padding: 0.25rem 0.4rem;
-                min-width: 30px;
+                padding: 0.4rem;
+                min-width: 32px;
+                height: 32px;
             }
 
                 .btn-action i {
-                    font-size: 0.8em;
+                    font-size: 0.9em;
                 }
 
             td:last-child {
-                min-width: 140px;
+                min-width: 50px;
             }
+
+            .btn-group-vertical {
+                gap: 2px;
+            }
+
+            .alert .d-flex {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .alert .fa-lg {
+                margin-bottom: 10px;
+            }
+        }
+
+        /* Efectos de transición mejorados */
+        .btn-action {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .table-hover tbody tr {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Sombras mejoradas */
+        .btn-action:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Focus states para accesibilidad */
+        .btn-action:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
         }
     </style>
 }

@@ -46,8 +46,7 @@ namespace ModulosTaller.Migrations
                     b.Property<int?>("IdMoto")
                         .HasColumnType("int");
 
-                    b.HasKey("IdAgendamiento")
-                        .HasName("PK__Agendami__8516393DC4B8E90B");
+                    b.HasKey("IdAgendamiento");
 
                     b.HasIndex("IdCliente");
 
@@ -71,8 +70,7 @@ namespace ModulosTaller.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("IdCategoria")
-                        .HasName("PK__Categori__A3C02A1030306DE5");
+                    b.HasKey("IdCategoria");
 
                     b.ToTable("CategoriaProductos");
                 });
@@ -136,8 +134,7 @@ namespace ModulosTaller.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.HasKey("IdCliente")
-                        .HasName("PK__Clientes__D594664212B0B659");
+                    b.HasKey("IdCliente");
 
                     b.HasIndex(new[] { "Documento" }, "UQ__Clientes__Documento")
                         .IsUnique();
@@ -164,8 +161,7 @@ namespace ModulosTaller.Migrations
                     b.Property<int?>("IdProveedor")
                         .HasColumnType("int");
 
-                    b.HasKey("IdCompra")
-                        .HasName("PK__Compras__0A5CDB5C716AAA18");
+                    b.HasKey("IdCompra");
 
                     b.HasIndex("IdProveedor");
 
@@ -192,8 +188,7 @@ namespace ModulosTaller.Migrations
                     b.Property<decimal>("PrecioUnitario")
                         .HasColumnType("decimal(10, 2)");
 
-                    b.HasKey("IdCompraDetalle")
-                        .HasName("PK__CompraDe__A1B840C5C2BC30EF");
+                    b.HasKey("IdCompraDetalle");
 
                     b.HasIndex("IdCompra");
 
@@ -220,8 +215,7 @@ namespace ModulosTaller.Migrations
                     b.Property<TimeOnly?>("HoraInicio")
                         .HasColumnType("time");
 
-                    b.HasKey("IdHorario")
-                        .HasName("PK__Horarios__1539229B0F26AE6A");
+                    b.HasKey("IdHorario");
 
                     b.ToTable("Horarios");
                 });
@@ -250,12 +244,11 @@ namespace ModulosTaller.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("IdMoto")
-                        .HasName("PK__Motocicl__33CED5FBEDA1A059");
+                    b.HasKey("IdMoto");
 
                     b.HasIndex("IdCliente");
 
-                    b.HasIndex(new[] { "Placa" }, "UQ__Motocicl__8310F99D2178C770")
+                    b.HasIndex("Placa")
                         .IsUnique();
 
                     b.ToTable("Motocicletas");
@@ -274,8 +267,7 @@ namespace ModulosTaller.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("IdPermiso")
-                        .HasName("PK__Permisos__0D626EC88C70CD31");
+                    b.HasKey("IdPermiso");
 
                     b.ToTable("Permisos");
                 });
@@ -302,8 +294,7 @@ namespace ModulosTaller.Migrations
                     b.Property<int>("Stock")
                         .HasColumnType("int");
 
-                    b.HasKey("IdProducto")
-                        .HasName("PK__Producto__09889210FAD937BE");
+                    b.HasKey("IdProducto");
 
                     b.HasIndex("IdCategoria");
 
@@ -331,8 +322,7 @@ namespace ModulosTaller.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("IdProveedor")
-                        .HasName("PK__Proveedo__E8B631AF3DEC2399");
+                    b.HasKey("IdProveedor");
 
                     b.ToTable("Proveedores");
                 });
@@ -345,13 +335,22 @@ namespace ModulosTaller.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdRol"));
 
+                    b.Property<bool>("Activo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
                     b.Property<string>("NombreRol")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("IdRol")
-                        .HasName("PK__Roles__2A49584C9AE85A0A");
+                    b.HasKey("IdRol");
 
                     b.ToTable("Roles");
                 });
@@ -364,6 +363,17 @@ namespace ModulosTaller.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdUsuario"));
 
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Apellido")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Barrio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Clave")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -374,6 +384,9 @@ namespace ModulosTaller.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<DateTime>("FechaNacimiento")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("IdRol")
                         .HasColumnType("int");
 
@@ -382,12 +395,23 @@ namespace ModulosTaller.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("IdUsuario")
-                        .HasName("PK__Usuarios__5B65BF97AE0A9458");
+                    b.Property<string>("NumeroDocumento")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TipoDocumento")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdUsuario");
 
                     b.HasIndex("IdRol");
 
-                    b.HasIndex(new[] { "Correo" }, "UQ__Usuarios__60695A19A7DCDF4A")
+                    b.HasIndex(new[] { "Correo" }, "UQ__Usuarios__Correo")
                         .IsUnique();
 
                     b.ToTable("Usuarios");
@@ -412,8 +436,10 @@ namespace ModulosTaller.Migrations
                     b.Property<int?>("IdCompra")
                         .HasColumnType("int");
 
-                    b.HasKey("IdVenta")
-                        .HasName("PK__Ventas__BC1240BDFC61093A");
+                    b.Property<string>("Observaciones")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdVenta");
 
                     b.HasIndex("IdCliente");
 
@@ -442,8 +468,7 @@ namespace ModulosTaller.Migrations
                     b.Property<decimal>("PrecioUnitario")
                         .HasColumnType("decimal(10, 2)");
 
-                    b.HasKey("IdVentaDetalle")
-                        .HasName("PK__VentaDet__2787211D41EF6E96");
+                    b.HasKey("IdVentaDetalle");
 
                     b.HasIndex("IdProducto");
 
@@ -460,8 +485,7 @@ namespace ModulosTaller.Migrations
                     b.Property<int>("IdPermiso")
                         .HasColumnType("int");
 
-                    b.HasKey("IdRol", "IdPermiso")
-                        .HasName("PK__RolPermi__BA9F7EA063D4DD87");
+                    b.HasKey("IdRol", "IdPermiso");
 
                     b.HasIndex("IdPermiso");
 
@@ -472,18 +496,15 @@ namespace ModulosTaller.Migrations
                 {
                     b.HasOne("ModulosTaller.Models.Cliente", "IdClienteNavigation")
                         .WithMany("Agendamientos")
-                        .HasForeignKey("IdCliente")
-                        .HasConstraintName("FK__Agendamie__IdCli__59FA5E80");
+                        .HasForeignKey("IdCliente");
 
                     b.HasOne("ModulosTaller.Models.Horario", "IdHorarioNavigation")
                         .WithMany("Agendamientos")
-                        .HasForeignKey("IdHorario")
-                        .HasConstraintName("FK__Agendamie__IdHor__5BE2A6F2");
+                        .HasForeignKey("IdHorario");
 
                     b.HasOne("ModulosTaller.Models.Motocicleta", "IdMotoNavigation")
                         .WithMany("Agendamientos")
-                        .HasForeignKey("IdMoto")
-                        .HasConstraintName("FK__Agendamie__IdMot__5AEE82B9");
+                        .HasForeignKey("IdMoto");
 
                     b.Navigation("IdClienteNavigation");
 
@@ -496,8 +517,7 @@ namespace ModulosTaller.Migrations
                 {
                     b.HasOne("ModulosTaller.Models.Proveedore", "IdProveedorNavigation")
                         .WithMany("Compras")
-                        .HasForeignKey("IdProveedor")
-                        .HasConstraintName("FK__Compras__IdProve__4BAC3F29");
+                        .HasForeignKey("IdProveedor");
 
                     b.Navigation("IdProveedorNavigation");
                 });
@@ -506,13 +526,11 @@ namespace ModulosTaller.Migrations
                 {
                     b.HasOne("ModulosTaller.Models.Compra", "IdCompraNavigation")
                         .WithMany("CompraDetalles")
-                        .HasForeignKey("IdCompra")
-                        .HasConstraintName("FK__CompraDet__IdCom__4E88ABD4");
+                        .HasForeignKey("IdCompra");
 
                     b.HasOne("ModulosTaller.Models.Producto", "IdProductoNavigation")
                         .WithMany("CompraDetalles")
-                        .HasForeignKey("IdProducto")
-                        .HasConstraintName("FK__CompraDet__IdPro__4F7CD00D");
+                        .HasForeignKey("IdProducto");
 
                     b.Navigation("IdCompraNavigation");
 
@@ -523,8 +541,7 @@ namespace ModulosTaller.Migrations
                 {
                     b.HasOne("ModulosTaller.Models.Cliente", "IdClienteNavigation")
                         .WithMany("Motocicleta")
-                        .HasForeignKey("IdCliente")
-                        .HasConstraintName("FK__Motocicle__IdCli__5535A963");
+                        .HasForeignKey("IdCliente");
 
                     b.Navigation("IdClienteNavigation");
                 });
@@ -533,8 +550,7 @@ namespace ModulosTaller.Migrations
                 {
                     b.HasOne("ModulosTaller.Models.CategoriaProducto", "IdCategoriaNavigation")
                         .WithMany("Productos")
-                        .HasForeignKey("IdCategoria")
-                        .HasConstraintName("FK__Productos__IdCat__45F365D3");
+                        .HasForeignKey("IdCategoria");
 
                     b.Navigation("IdCategoriaNavigation");
                 });
@@ -543,8 +559,7 @@ namespace ModulosTaller.Migrations
                 {
                     b.HasOne("ModulosTaller.Models.Role", "IdRolNavigation")
                         .WithMany("Usuarios")
-                        .HasForeignKey("IdRol")
-                        .HasConstraintName("FK__Usuarios__IdRol__403A8C7D");
+                        .HasForeignKey("IdRol");
 
                     b.Navigation("IdRolNavigation");
                 });
@@ -553,13 +568,11 @@ namespace ModulosTaller.Migrations
                 {
                     b.HasOne("ModulosTaller.Models.Cliente", "IdClienteNavigation")
                         .WithMany("Venta")
-                        .HasForeignKey("IdCliente")
-                        .HasConstraintName("FK__Ventas__IdClient__5FB337D6");
+                        .HasForeignKey("IdCliente");
 
                     b.HasOne("ModulosTaller.Models.Compra", "IdCompraNavigation")
                         .WithMany("Venta")
-                        .HasForeignKey("IdCompra")
-                        .HasConstraintName("FK__Ventas__IdCompra__60A75C0F");
+                        .HasForeignKey("IdCompra");
 
                     b.Navigation("IdClienteNavigation");
 
@@ -570,13 +583,11 @@ namespace ModulosTaller.Migrations
                 {
                     b.HasOne("ModulosTaller.Models.Producto", "IdProductoNavigation")
                         .WithMany("VentaDetalles")
-                        .HasForeignKey("IdProducto")
-                        .HasConstraintName("FK__VentaDeta__IdPro__6477ECF3");
+                        .HasForeignKey("IdProducto");
 
                     b.HasOne("ModulosTaller.Models.Venta", "IdVentaNavigation")
                         .WithMany("VentaDetalles")
-                        .HasForeignKey("IdVenta")
-                        .HasConstraintName("FK__VentaDeta__IdVen__6383C8BA");
+                        .HasForeignKey("IdVenta");
 
                     b.Navigation("IdProductoNavigation");
 
@@ -588,14 +599,12 @@ namespace ModulosTaller.Migrations
                     b.HasOne("ModulosTaller.Models.Permiso", null)
                         .WithMany()
                         .HasForeignKey("IdPermiso")
-                        .IsRequired()
-                        .HasConstraintName("FK__RolPermis__IdPer__3C69FB99");
+                        .IsRequired();
 
                     b.HasOne("ModulosTaller.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("IdRol")
-                        .IsRequired()
-                        .HasConstraintName("FK__RolPermis__IdRol__3B75D760");
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ModulosTaller.Models.CategoriaProducto", b =>
